@@ -9,61 +9,51 @@
     <!-- SheetJS para Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .font-serif-title { font-family: 'Cinzel', serif; }
     </style>
 </head>
-<body class="bg-[#F8F5EE] text-[#332E2B] min-h-screen p-2 sm:p-4 overflow-x-hidden">
+<body class="bg-[#F6F3EC] text-[#2C2724] min-h-screen p-2 sm:p-4 overflow-x-hidden">
 
     <div class="max-w-md md:max-w-5xl mx-auto space-y-3 sm:space-y-5 w-full">
 
-        <!-- Header / Logo & Título Principal -->
-        <header class="bg-[#FFFDF9] rounded-xl p-4 sm:p-5 shadow-md border border-[#E5D7C3] text-center flex flex-col items-center justify-center">
-            <!-- Icono/Logo Estilizado basándose en el diseño del logo -->
-            <div class="w-16 h-16 sm:w-20 sm:h-20 mb-2 rounded-full bg-[#F8F5EE] border-2 border-[#C5A059] flex flex-col items-center justify-center p-1 shadow-sm">
-                <svg class="w-8 h-8 text-[#C5A059]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M4 18C4 10.268 10.268 4 18 4" stroke-dasharray="2 2"/>
-                    <path d="M3 19C3 10.716 9.716 4 18 4"/>
-                    <path d="M6 18C6 11.373 11.373 6 18 6"/>
-                    <circle cx="12" cy="8" r="1" fill="#C5A059"/>
-                </svg>
-                <span class="text-[7px] tracking-widest text-[#8C7355] font-serif uppercase -mt-1">Fantasy</span>
-            </div>
+        <!-- Header / Logo Oficial del Centro de Eventos -->
+        <header class="bg-[#FAF7F2] rounded-2xl p-4 sm:p-5 shadow-sm border border-[#E3D8C8] text-center flex flex-col items-center justify-center">
             
-            <span class="text-[9px] sm:text-xs tracking-[0.2em] font-bold text-[#8C7355] uppercase font-serif-title">CENTRO DE EVENTOS</span>
-            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-widest text-[#2A2421] font-serif-title mt-0.5">
-                FANTASY
-            </h1>
-            <div class="w-16 h-0.5 bg-[#C5A059] my-1.5 rounded-full"></div>
-            <p class="text-[#6E6259] text-[11px] sm:text-xs font-medium">Control de Ingreso y Asistencia en Tiempo Real</p>
+            <!-- Logo Circular del Cliente (Puedes cambiar 'logo.jpg' por el nombre o URL de tu imagen) -->
+            <div class="w-24 h-24 sm:w-28 sm:h-28 mb-2 rounded-full overflow-hidden shadow-md border-2 border-[#D4B07B] flex items-center justify-center bg-white">
+                <img src="logo.jpg" alt="Centro de Eventos Fantasy" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'p-2 text-center text-[10px] text-[#A3814C] font-serif\'>✨<br><b>FANTASY</b><br>Centro de Eventos</div>';">
+            </div>
+
+            <p class="text-[#807266] text-[11px] sm:text-xs font-medium tracking-wide">Control de Ingreso y Asistencia en Tiempo Real</p>
         </header>
 
         <!-- Panel de Búsqueda y Registro Rápido -->
-        <section class="bg-[#FFFDF9] border border-[#E5D7C3] rounded-xl p-3 sm:p-4 shadow-md space-y-2.5">
-            <div class="flex items-center justify-between border-b border-[#E5D7C3] pb-2">
-                <h2 class="text-xs sm:text-base font-bold text-[#8C7355] flex items-center gap-1.5 font-serif-title">
+        <section class="bg-[#FAF7F2] border border-[#E3D8C8] rounded-xl p-3 sm:p-4 shadow-sm space-y-2.5">
+            <div class="flex items-center justify-between border-b border-[#E3D8C8] pb-2">
+                <h2 class="text-xs sm:text-base font-bold text-[#A3814C] flex items-center gap-1.5 font-serif-title">
                     🔍 Búsqueda y Registro Rápido
                 </h2>
-                <span class="text-[9px] sm:text-xs bg-[#F3ECE0] text-[#8C7355] px-2.5 py-0.5 rounded-full border border-[#C5A059]/40 font-bold">En Vivo</span>
+                <span class="text-[9px] sm:text-xs bg-[#F0E8DC] text-[#91713E] px-2.5 py-0.5 rounded-full border border-[#D4B07B]/40 font-bold">En Vivo</span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                 <div>
-                    <label class="block text-[11px] font-semibold text-[#524842] mb-0.5">Buscar por ID o Nombre:</label>
+                    <label class="block text-[11px] font-semibold text-[#544A43] mb-0.5">Buscar por ID o Nombre:</label>
                     <input type="text" id="searchInput" placeholder="Ej. 1 o Kathleen..." 
-                           class="w-full bg-[#F8F5EE] text-[#2A2421] font-bold px-2.5 py-2 rounded-lg border-2 border-[#C5A059] focus:outline-none focus:ring-2 focus:ring-[#A88340] shadow-inner text-xs sm:text-sm"
+                           class="w-full bg-[#F6F3EC] text-[#2C2724] font-bold px-2.5 py-2 rounded-lg border-2 border-[#D4B07B] focus:outline-none focus:ring-2 focus:ring-[#B38F56] shadow-inner text-xs sm:text-sm"
                            oninput="realizarBusqueda()"
                            onkeydown="if(event.key==='Enter') document.getElementById('realInput').focus()">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold text-[#524842] mb-0.5">Cantidad Real que Ingresa:</label>
+                    <label class="block text-[11px] font-semibold text-[#544A43] mb-0.5">Cantidad Real que Ingresa:</label>
                     <div class="flex gap-2">
                         <input type="number" id="realInput" value="0" min="0" 
-                               class="w-full bg-[#F8F5EE] text-[#2A2421] font-bold px-2.5 py-2 rounded-lg border-2 border-[#D8C2A3] focus:outline-none focus:ring-2 focus:ring-[#C5A059] shadow-inner text-center text-sm"
+                               class="w-full bg-[#F6F3EC] text-[#2C2724] font-bold px-2.5 py-2 rounded-lg border-2 border-[#D2C3B0] focus:outline-none focus:ring-2 focus:ring-[#D4B07B] shadow-inner text-center text-sm"
                                oninput="actualizarIngresoActual()"
                                onkeydown="if(event.key==='Enter') confirmarIngreso()">
-                        <button onclick="confirmarIngreso()" class="bg-[#C5A059] hover:bg-[#A88340] text-white font-bold px-4 py-2 rounded-lg shadow transition text-xs flex items-center justify-center cursor-pointer shrink-0">
+                        <button onclick="confirmarIngreso()" class="bg-[#C4A06B] hover:bg-[#A3814C] text-white font-bold px-4 py-2 rounded-lg shadow transition text-xs flex items-center justify-center cursor-pointer shrink-0">
                             Aceptar
                         </button>
                     </div>
@@ -72,55 +62,55 @@
 
             <!-- Resultados en Tarjetas -->
             <div class="grid grid-cols-3 gap-1.5 pt-1">
-                <div class="bg-[#F8F5EE] p-2 rounded-lg border border-[#E5D7C3] text-center overflow-hidden">
-                    <span class="block text-[9px] sm:text-xs text-[#7A6E65]">Nombre Confirmado</span>
-                    <span id="resNombre" class="text-xs sm:text-sm font-bold text-[#A88340] truncate block">-</span>
+                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden">
+                    <span class="block text-[9px] sm:text-xs text-[#807266]">Nombre Confirmado</span>
+                    <span id="resNombre" class="text-xs sm:text-sm font-bold text-[#B38F56] truncate block">-</span>
                 </div>
-                <div class="bg-[#F8F5EE] p-2 rounded-lg border border-[#E5D7C3] text-center overflow-hidden">
-                    <span class="block text-[9px] sm:text-xs text-[#7A6E65]">En Lista</span>
-                    <span id="resLista" class="text-xs sm:text-sm font-bold text-[#2D7A53] block">-</span>
+                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden">
+                    <span class="block text-[9px] sm:text-xs text-[#807266]">En Lista</span>
+                    <span id="resLista" class="text-xs sm:text-sm font-bold text-[#2A754F] block">-</span>
                 </div>
-                <div class="bg-[#F8F5EE] p-2 rounded-lg border border-[#E5D7C3] text-center overflow-hidden">
-                    <span class="block text-[9px] sm:text-xs text-[#7A6E65]">Mesa Asignada</span>
-                    <span id="resMesa" class="text-xs sm:text-sm font-bold text-[#8C7355] truncate block">-</span>
+                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden">
+                    <span class="block text-[9px] sm:text-xs text-[#807266]">Mesa Asignada</span>
+                    <span id="resMesa" class="text-xs sm:text-sm font-bold text-[#91713E] truncate block">-</span>
                 </div>
             </div>
 
-            <div id="estadoBox" class="p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#F8F5EE] text-[#6E6259] border border-[#E5D7C3]">
+            <div id="estadoBox" class="p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#F6F3EC] text-[#6E6259] border border-[#E3D8C8]">
                 ⏳ Ingrese un ID o Nombre para registrar llegada
             </div>
         </section>
 
         <!-- Panel de Estadísticas Generales -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-2">
-            <div class="bg-[#FFFDF9] border border-[#E5D7C3] p-2.5 rounded-xl text-center shadow-sm">
-                <span class="block text-[10px] sm:text-xs text-[#7A6E65]">Total Grupos</span>
-                <span id="statTotalGrupos" class="text-base sm:text-lg font-bold text-[#2A2421]">34</span>
+            <div class="bg-[#FAF7F2] border border-[#E3D8C8] p-2.5 rounded-xl text-center shadow-sm">
+                <span class="block text-[10px] sm:text-xs text-[#807266]">Total Grupos</span>
+                <span id="statTotalGrupos" class="text-base sm:text-lg font-bold text-[#2C2724]">34</span>
             </div>
-            <div class="bg-[#FFFDF9] border border-[#E5D7C3] p-2.5 rounded-xl text-center shadow-sm">
-                <span class="block text-[10px] sm:text-xs text-[#7A6E65]">Personas Esperadas</span>
-                <span id="statEsperadas" class="text-base sm:text-lg font-bold text-[#8C7355]">0</span>
+            <div class="bg-[#FAF7F2] border border-[#E3D8C8] p-2.5 rounded-xl text-center shadow-sm">
+                <span class="block text-[10px] sm:text-xs text-[#807266]">Personas Esperadas</span>
+                <span id="statEsperadas" class="text-base sm:text-lg font-bold text-[#91713E]">0</span>
             </div>
-            <div class="bg-[#FFFDF9] border border-[#E5D7C3] p-2.5 rounded-xl text-center shadow-sm">
-                <span class="block text-[10px] sm:text-xs text-[#7A6E65]">Ingresadas (Real)</span>
-                <span id="statIngresadas" class="text-base sm:text-lg font-bold text-[#2D7A53]">0</span>
+            <div class="bg-[#FAF7F2] border border-[#E3D8C8] p-2.5 rounded-xl text-center shadow-sm">
+                <span class="block text-[10px] sm:text-xs text-[#807266]">Ingresadas (Real)</span>
+                <span id="statIngresadas" class="text-base sm:text-lg font-bold text-[#2A754F]">0</span>
             </div>
-            <div class="bg-[#FFFDF9] border border-[#E5D7C3] p-2.5 rounded-xl text-center shadow-sm">
-                <span class="block text-[10px] sm:text-xs text-[#7A6E65]">Faltan por Llegar</span>
-                <span id="statFaltantesTotal" class="text-base sm:text-lg font-bold text-[#A88340]">0</span>
+            <div class="bg-[#FAF7F2] border border-[#E3D8C8] p-2.5 rounded-xl text-center shadow-sm">
+                <span class="block text-[10px] sm:text-xs text-[#807266]">Faltan por Llegar</span>
+                <span id="statFaltantesTotal" class="text-base sm:text-lg font-bold text-[#B38F56]">0</span>
             </div>
         </section>
 
         <!-- Tabla General Adaptada al 100% Sin Scroll Horizontal -->
-        <section class="bg-[#FFFDF9] border border-[#E5D7C3] rounded-xl p-2.5 sm:p-4 shadow-md space-y-2">
+        <section class="bg-[#FAF7F2] border border-[#E3D8C8] rounded-xl p-2.5 sm:p-4 shadow-sm space-y-2">
             <div class="flex items-center justify-between">
-                <h2 class="text-xs sm:text-base font-bold text-[#2A2421] font-serif-title">📋 Lista General de Invitados</h2>
-                <span id="totalRegistros" class="text-[10px] sm:text-xs text-[#7A6E65]">Total: 34 registros</span>
+                <h2 class="text-xs sm:text-base font-bold text-[#2C2724] font-serif-title">📋 Lista General de Invitados</h2>
+                <span id="totalRegistros" class="text-[10px] sm:text-xs text-[#807266]">Total: 34 registros</span>
             </div>
             
-            <div class="rounded-lg border border-[#E5D7C3] overflow-x-hidden overflow-y-auto max-h-[380px] w-full">
+            <div class="rounded-lg border border-[#E3D8C8] overflow-x-hidden overflow-y-auto max-h-[380px] w-full">
                 <table class="w-full text-left border-collapse table-fixed">
-                    <thead class="bg-[#F8F5EE] text-[#524842] sticky top-0 uppercase text-[9px] sm:text-[11px] tracking-tight z-10 border-b border-[#E5D7C3]">
+                    <thead class="bg-[#F6F3EC] text-[#544A43] sticky top-0 uppercase text-[9px] sm:text-[11px] tracking-tight z-10 border-b border-[#E3D8C8]">
                         <tr>
                             <th class="p-1 sm:p-2 text-center w-[10%]">ID</th>
                             <th class="p-1 sm:p-2 w-[32%]">NOMBRE</th>
@@ -130,7 +120,7 @@
                             <th class="p-1 sm:p-2 text-center w-[14%]">ESTADO</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaInvitadosBody" class="divide-y divide-[#E5D7C3]/60 bg-[#FFFDF9] text-[11px] sm:text-xs">
+                    <tbody id="tablaInvitadosBody" class="divide-y divide-[#E3D8C8]/60 bg-[#FAF7F2] text-[11px] sm:text-xs">
                         <!-- Se llena dinámicamente -->
                     </tbody>
                 </table>
@@ -138,16 +128,16 @@
         </section>
 
         <!-- Administración de Listas Excel -->
-        <footer class="bg-[#FFFDF9] border border-[#E5D7C3] rounded-xl p-3 shadow-sm text-center">
-            <h3 class="text-xs sm:text-sm font-bold text-[#2A2421] font-serif-title">Administración de Listas</h3>
-            <p class="text-[#7A6E65] text-[10px] mt-0.5">Sube una base de datos actualizada para el evento (.xlsx)</p>
+        <footer class="bg-[#FAF7F2] border border-[#E3D8C8] rounded-xl p-3 shadow-sm text-center">
+            <h3 class="text-xs sm:text-sm font-bold text-[#2C2724] font-serif-title">Administración de Listas</h3>
+            <p class="text-[#807266] text-[10px] mt-0.5">Sube una base de datos actualizada para el evento (.xlsx)</p>
             
             <div class="mt-2 flex flex-col sm:flex-row items-center justify-center gap-1.5">
-                <label class="cursor-pointer bg-[#C5A059] hover:bg-[#A88340] text-white font-bold px-3 py-1.5 rounded-lg shadow transition text-[11px] flex items-center gap-1">
+                <label class="cursor-pointer bg-[#C4A06B] hover:bg-[#A3814C] text-white font-bold px-3 py-1.5 rounded-lg shadow transition text-[11px] flex items-center gap-1">
                     📁 Cargar Nueva Lista Excel
                     <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="hidden" onchange="cargarExcel(event)">
                 </label>
-                <span id="fileStatus" class="text-[10px] text-[#8C7355] italic">Lista predeterminada activa</span>
+                <span id="fileStatus" class="text-[10px] text-[#91713E] italic">Lista predeterminada activa</span>
             </div>
         </footer>
 
@@ -205,33 +195,33 @@
             
             invitados.forEach((inv, index) => {
                 let estadoBadge = '';
-                let rowBgColor = "hover:bg-[#F8F5EE] transition border-b border-[#E5D7C3]/60";
+                let rowBgColor = "hover:bg-[#F6F3EC] transition border-b border-[#E3D8C8]/60";
                 
                 if (inv.real === 0) {
-                    estadoBadge = `<span class="px-1 py-0.5 rounded text-[9px] bg-[#E5D7C3] text-[#524842] font-medium whitespace-nowrap">⏳</span>`;
+                    estadoBadge = `<span class="px-1 py-0.5 rounded text-[9px] bg-[#E3D8C8] text-[#544A43] font-medium whitespace-nowrap">⏳</span>`;
                 } else if (inv.real < inv.lista) {
                     let diff = inv.lista - inv.real;
-                    estadoBadge = `<span class="px-1 py-0.5 rounded text-[9px] bg-[#C5A059] text-white font-black shadow-sm whitespace-nowrap">⚠️ -${diff}</span>`;
-                    rowBgColor = "bg-[#FFF9EE] hover:bg-[#FDF3DE] transition border-b border-[#E5D7C3]";
+                    estadoBadge = `<span class="px-1 py-0.5 rounded text-[9px] bg-[#C4A06B] text-white font-black shadow-sm whitespace-nowrap">⚠️ -${diff}</span>`;
+                    rowBgColor = "bg-[#FFF9EE] hover:bg-[#FDF3DE] transition border-b border-[#E3D8C8]";
                 } else if (inv.real > inv.lista) {
                     let diff = inv.real - inv.lista;
                     estadoBadge = `<span class="px-1 py-0.5 rounded text-[9px] bg-[#B84A39] text-white font-black shadow-sm whitespace-nowrap">🚨 +${diff}</span>`;
-                    rowBgColor = "bg-[#FDF2F0] hover:bg-[#FBE5E1] transition border-b border-[#E5D7C3]";
+                    rowBgColor = "bg-[#FDF2F0] hover:bg-[#FBE5E1] transition border-b border-[#E3D8C8]";
                 } else {
-                    estadoBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] bg-[#2D7A53] text-white font-black shadow-[0_0_8px_rgba(45,122,83,0.4)] border border-[#236041] whitespace-nowrap">✅ Exacto</span>`;
-                    rowBgColor = "bg-[#F0F7F3] hover:bg-[#E2F0E7] transition border-b border-[#E5D7C3]";
+                    estadoBadge = `<span class="px-1.5 py-0.5 rounded text-[9px] bg-[#2A754F] text-white font-black shadow-[0_0_8px_rgba(42,117,79,0.4)] border border-[#1E573B] whitespace-nowrap">✅ Exacto</span>`;
+                    rowBgColor = "bg-[#F0F7F3] hover:bg-[#E2F0E7] transition border-b border-[#E3D8C8]";
                 }
 
                 let tr = document.createElement('tr');
                 tr.className = rowBgColor;
                 tr.innerHTML = `
-                    <td class="p-1 sm:p-1.5 text-center font-mono font-bold text-[#A88340]">${inv.id}</td>
-                    <td class="p-1 sm:p-1.5 font-semibold text-[#2A2421] truncate" title="${inv.nombre}">${inv.nombre}</td>
-                    <td class="p-1 sm:p-1.5 text-center font-bold text-[#8C7355]">${inv.lista}</td>
+                    <td class="p-1 sm:p-1.5 text-center font-mono font-bold text-[#B38F56]">${inv.id}</td>
+                    <td class="p-1 sm:p-1.5 font-semibold text-[#2C2724] truncate" title="${inv.nombre}">${inv.nombre}</td>
+                    <td class="p-1 sm:p-1.5 text-center font-bold text-[#91713E]">${inv.lista}</td>
                     <td class="p-1 sm:p-1.5 text-[#6E6259] text-[10px] sm:text-xs truncate" title="${inv.mesa}">${inv.mesa}</td>
                     <td class="p-1 sm:p-1.5 text-center">
                         <input type="number" min="0" value="${inv.real}" 
-                               class="w-10 sm:w-12 bg-[#FFFDF9] text-[#2A2421] font-bold text-center py-0.5 rounded border border-[#C5A059] focus:ring-1 focus:ring-[#A88340] text-xs shadow-inner"
+                               class="w-10 sm:w-12 bg-[#FAF7F2] text-[#2C2724] font-bold text-center py-0.5 rounded border border-[#D4B07B] focus:ring-1 focus:ring-[#B38F56] text-xs shadow-inner"
                                onchange="actualizarRealTabla(${index}, this.value)">
                     </td>
                     <td class="p-1 sm:p-1.5 text-center">${estadoBadge}</td>
@@ -273,7 +263,7 @@
                 document.getElementById('resLista').innerText = "-";
                 document.getElementById('resMesa').innerText = "-";
                 document.getElementById('realInput').value = 0;
-                document.getElementById('estadoBox').className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#F8F5EE] text-[#6E6259] border border-[#E5D7C3]";
+                document.getElementById('estadoBox').className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#F6F3EC] text-[#6E6259] border border-[#E3D8C8]";
                 document.getElementById('estadoBox').innerText = "⏳ Ingrese un ID o Nombre para registrar llegada";
                 return;
             }
@@ -294,7 +284,7 @@
                 document.getElementById('resMesa').innerText = "-";
                 document.getElementById('realInput').value = 0;
                 const box = document.getElementById('estadoBox');
-                box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#FFF3DC] text-[#A88340] border border-[#C5A059]";
+                box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#FFF3DC] text-[#B38F56] border border-[#D4B07B]";
                 box.innerText = "⚠️ Invitado no encontrado en la lista";
             }
         }
@@ -324,18 +314,18 @@
             const box = document.getElementById('estadoBox');
 
             if (real === 0) {
-                box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#F8F5EE] text-[#6E6259] border border-[#E5D7C3]";
+                box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#F6F3EC] text-[#6E6259] border border-[#E3D8C8]";
                 box.innerText = "⏳ Pendiente de confirmar asistencia";
             } else if (real < esperado) {
                 let diff = esperado - real;
-                box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#C5A059] text-white shadow-md font-black";
+                box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#C4A06B] text-white shadow-md font-black";
                 box.innerText = `⚠️ FALTANTE (-${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
             } else if (real > esperado) {
                 let diff = real - esperado;
                 box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#B84A39] text-white shadow-md font-black";
                 box.innerText = `🚨 ¡EXCESO! (+${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
             } else {
-                box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#2D7A53] text-white shadow-[0_0_12px_rgba(45,122,83,0.5)] font-black border border-[#236041]";
+                box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#2A754F] text-white shadow-[0_0_12px_rgba(42,117,79,0.5)] font-black border border-[#1E573B]";
                 box.innerText = `✅ EXACTO -> Asistencia completa (${real}/${esperado})`;
             }
         }
@@ -370,7 +360,7 @@
                         invitados = nuevaLista;
                         renderApp();
                         document.getElementById('fileStatus').innerText = `✅ Cargado: ${file.name} (${invitados.length} invitados)`;
-                        document.getElementById('fileStatus').className = "text-[10px] text-[#2D7A53] font-bold italic";
+                        document.getElementById('fileStatus').className = "text-[10px] text-[#2A754F] font-bold italic";
                     } else {
                         alert("No se pudieron leer datos válidos del Excel.");
                     }

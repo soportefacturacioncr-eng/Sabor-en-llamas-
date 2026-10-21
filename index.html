@@ -16,20 +16,58 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen p-3 md:p-6">
 
     <div class="max-w-5xl mx-auto space-y-6">
-        
-        <!-- Header -->
-        <header class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-5 shadow-xl text-center relative overflow-hidden">
-            <h1 class="text-2xl md:text-3xl font-bold tracking-tight">🎉 Control de Ingreso y Asistencia</h1>
-            <p class="text-blue-200 text-sm mt-1">Gestión de Mesas, Ingresos Reales y Faltantes con Alertas en Vivo</p>
-            
-            <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <label class="cursor-pointer bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm">
-                    📁 Cargar Nueva Lista Excel (.xlsx)
-                    <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="hidden" onchange="cargarExcel(event)">
-                </label>
-                <span id="fileStatus" class="text-xs text-blue-300 italic">Lista predeterminada activa (34 invitados)</span>
+
+        <!-- Panel de Búsqueda y Registro Rápido -->
+        <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <h2 class="text-lg font-semibold text-indigo-300 flex items-center gap-2">
+                    🔍 Búsqueda y Registro Rápido en Entrada
+                </h2>
+                <span class="text-xs bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-800">En Vivo</span>
             </div>
-        </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Buscar por ID o Nombre:</label>
+                    <input type="text" id="searchInput" placeholder="Ej. 1 o Kathleen..." 
+                           class="w-full bg-amber-50 text-slate-900 font-bold px-4 py-3 rounded-xl border-2 border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-inner"
+                           oninput="realizarBusqueda()"
+                           onkeydown="if(event.key==='Enter') document.getElementById('realInput').focus()">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Cantidad Real que Ingresa:</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="realInput" value="0" min="0" 
+                               class="w-full bg-slate-900 text-white font-bold px-4 py-3 rounded-xl border-2 border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner text-center text-lg"
+                               oninput="actualizarIngresoActual()"
+                               onkeydown="if(event.key==='Enter') confirmarIngreso()">
+                        <button onclick="confirmarIngreso()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-3 rounded-xl shadow transition flex items-center justify-center">
+                            Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultados en Tarjetas -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
+                    <span class="block text-xs text-slate-400">Nombre Confirmado</span>
+                    <span id="resNombre" class="text-base font-bold text-amber-400">-</span>
+                </div>
+                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
+                    <span class="block text-xs text-slate-400">Asistentes en Lista</span>
+                    <span id="resLista" class="text-base font-bold text-emerald-400">-</span>
+                </div>
+                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
+                    <span class="block text-xs text-slate-400">Mesa Asignada</span>
+                    <span id="resMesa" class="text-base font-bold text-cyan-400">-</span>
+                </div>
+            </div>
+
+            <div id="estadoBox" class="p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700">
+                ⏳ Ingrese un ID o Nombre para registrar llegada
+            </div>
+        </section>
 
         <!-- Panel de Estadísticas Generales (Resumen) -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -58,16 +96,16 @@
                 <span id="totalRegistros" class="text-xs text-slate-400">Total: 34 registros</span>
             </div>
             
-            <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[500px]">
+            <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[400px]">
                 <table class="w-full text-left border-collapse text-sm">
                     <thead class="bg-slate-900 text-slate-300 sticky top-0 uppercase text-xs tracking-wider z-10">
                         <tr>
-                            <th class="p-3 text-center">ID</th>
-                            <th class="p-3">Nombre / Grupo</th>
-                            <th class="p-3 text-center">Lista</th>
-                            <th class="p-3">Mesa Asignada</th>
-                            <th class="p-3 text-center">Real Ingresa</th>
-                            <th class="p-3 text-center">Estado / Alerta</th>
+                            <th class="p-2 text-center">ID</th>
+                            <th class="p-2">Nombre / Grupo</th>
+                            <th class="p-2 text-center">Lista</th>
+                            <th class="p-2">Mesa Asignada</th>
+                            <th class="p-2 text-center w-24">Real Ingresa</th>
+                            <th class="p-2 text-center">Estado / Alerta</th>
                         </tr>
                     </thead>
                     <tbody id="tablaInvitadosBody" class="divide-y divide-slate-700/60 bg-slate-800/50">
@@ -77,50 +115,19 @@
             </div>
         </section>
 
-        <!-- Panel de Búsqueda y Registro Rápido (Movido al final) -->
-        <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-                <h2 class="text-lg font-semibold text-indigo-300 flex items-center gap-2">
-                    🔍 Búsqueda y Registro Rápido en Entrada
-                </h2>
-                <span class="text-xs bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-800">En Vivo</span>
+        <!-- Sección de Carga de Excel (Al final) -->
+        <footer class="bg-slate-800/90 border border-slate-700 rounded-2xl p-5 shadow-xl text-center overflow-hidden">
+            <h1 class="text-xl font-bold tracking-tight text-white">Administración de Listas</h1>
+            <p class="text-slate-400 text-sm mt-1">Sube aquí una base de datos actualizada para el evento</p>
+            
+            <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <label class="cursor-pointer bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm">
+                    📁 Cargar Nueva Lista Excel (.xlsx)
+                    <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="hidden" onchange="cargarExcel(event)">
+                </label>
+                <span id="fileStatus" class="text-xs text-blue-300 italic">Lista predeterminada activa (34 invitados)</span>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Buscar por ID o Nombre:</label>
-                    <input type="text" id="searchInput" placeholder="Ej. 1 o Kathleen..." 
-                           class="w-full bg-amber-50 text-slate-900 font-bold px-4 py-3 rounded-xl border-2 border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-inner"
-                           oninput="realizarBusqueda()">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Cantidad Real que Ingresa:</label>
-                    <input type="number" id="realInput" value="0" min="0" 
-                           class="w-full bg-slate-900 text-white font-bold px-4 py-3 rounded-xl border-2 border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner text-center text-lg"
-                           oninput="actualizarIngresoActual()">
-                </div>
-            </div>
-
-            <!-- Resultados en Tarjetas -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
-                    <span class="block text-xs text-slate-400">Nombre Confirmado</span>
-                    <span id="resNombre" class="text-base font-bold text-amber-400">-</span>
-                </div>
-                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
-                    <span class="block text-xs text-slate-400">Asistentes en Lista</span>
-                    <span id="resLista" class="text-base font-bold text-emerald-400">-</span>
-                </div>
-                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
-                    <span class="block text-xs text-slate-400">Mesa Asignada</span>
-                    <span id="resMesa" class="text-base font-bold text-cyan-400">-</span>
-                </div>
-            </div>
-
-            <div id="estadoBox" class="p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700">
-                ⏳ Ingrese un ID o Nombre para registrar llegada
-            </div>
-        </section>
+        </footer>
 
     </div>
 
@@ -196,16 +203,16 @@
                 let tr = document.createElement('tr');
                 tr.className = rowBgColor;
                 tr.innerHTML = `
-                    <td class="p-3 text-center font-mono font-bold text-amber-400">${inv.id}</td>
-                    <td class="p-3 font-medium text-slate-100">${inv.nombre}</td>
-                    <td class="p-3 text-center font-bold text-cyan-200">${inv.lista}</td>
-                    <td class="p-3 text-cyan-300 text-xs">${inv.mesa}</td>
-                    <td class="p-3 text-center">
+                    <td class="p-2 text-center font-mono font-bold text-amber-400">${inv.id}</td>
+                    <td class="p-2 font-medium text-slate-100">${inv.nombre}</td>
+                    <td class="p-2 text-center font-bold text-cyan-200">${inv.lista}</td>
+                    <td class="p-2 text-cyan-300 text-xs">${inv.mesa}</td>
+                    <td class="p-2 text-center">
                         <input type="number" min="0" value="${inv.real}" 
                                class="w-20 bg-slate-900 text-white font-bold text-center px-2 py-1.5 rounded-lg border border-slate-600 focus:ring-2 focus:ring-indigo-500 shadow-inner"
                                onchange="actualizarRealTabla(${index}, this.value)">
                     </td>
-                    <td class="p-3 text-center">${estadoBadge}</td>
+                    <td class="p-2 text-center">${estadoBadge}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -216,8 +223,11 @@
             invitados[index].real = parseInt(value) || 0;
             renderTabla();
             actualizarEstadisticas();
+            
+            // Si el invitado editado en la tabla es el mismo de la búsqueda actual, actualizar panel
             if (invitadoActual && invitadoActual.id === invitados[index].id) {
-                document.getElementById('realInput').value = invitados[index].real;
+                invitadoActual.real = invitados[index].real;
+                document.getElementById('realInput').value = invitadoActual.real;
                 actualizarEstadoPanel();
             }
         }
@@ -241,6 +251,7 @@
                 document.getElementById('resNombre').innerText = "-";
                 document.getElementById('resLista').innerText = "-";
                 document.getElementById('resMesa').innerText = "-";
+                document.getElementById('realInput').value = 0;
                 document.getElementById('estadoBox').className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700";
                 document.getElementById('estadoBox').innerText = "⏳ Ingrese un ID o Nombre para registrar llegada";
                 return;
@@ -260,30 +271,36 @@
                 document.getElementById('resNombre').innerText = "No encontrado";
                 document.getElementById('resLista').innerText = "-";
                 document.getElementById('resMesa').innerText = "-";
+                document.getElementById('realInput').value = 0;
                 const box = document.getElementById('estadoBox');
                 box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-amber-950/80 text-amber-300 border border-amber-600";
                 box.innerText = "⚠️ Invitado no encontrado en la lista";
             }
         }
 
-        function actualizarIngresoActual() {
+        function confirmarIngreso() {
             if (!invitadoActual) return;
             const realVal = parseInt(document.getElementById('realInput').value) || 0;
-            invitadoActual.real = realVal;
             
             let idx = invitados.findIndex(i => i.id === invitadoActual.id);
             if (idx !== -1) {
                 invitados[idx].real = realVal;
+                renderApp();
+                // Limpiar el buscador para la siguiente persona
+                document.getElementById('searchInput').value = "";
+                document.getElementById('searchInput').focus();
+                realizarBusqueda();
             }
+        }
 
-            renderTabla();
-            actualizarEstadisticas();
+        function actualizarIngresoActual() {
+            // Esta función solo actualiza el estado del panel en tiempo real mientras escribe
             actualizarEstadoPanel();
         }
 
         function actualizarEstadoPanel() {
             if (!invitadoActual) return;
-            const real = invitadoActual.real;
+            const real = parseInt(document.getElementById('realInput').value) || 0;
             const esperado = invitadoActual.lista;
             const box = document.getElementById('estadoBox');
 
@@ -293,13 +310,13 @@
             } else if (real < esperado) {
                 let diff = esperado - real;
                 box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-amber-400 text-slate-950 shadow-lg font-extrabold";
-                box.innerText = `⚠️ FALTANTE (-${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
+                box.innerText = `⚠️ FALTANTE (-${diff}) -> Esperados: ${esperado}, Presentes:${real}`;
             } else if (real > esperado) {
                 let diff = real - esperado;
                 box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-red-600 text-white shadow-lg font-extrabold";
-                box.innerText = `🚨 ¡EXCESO! (+${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
+                box.innerText = `🚨 ¡EXCESO! (+${diff}) -> Esperados: ${esperado}, Presentes:${real}`;
             } else {
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-emerald-500 text-slate-950 shadow-lg font-extrabold";
+                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-emerald-500 text-slate-950 shadow-lg font-extrabold`;
                 box.innerText = `✅ EXACTO -> Asistencia completa (${real}/${esperado})`;
             }
         }

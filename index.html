@@ -224,7 +224,6 @@
             renderTabla();
             actualizarEstadisticas();
             
-            // Si el invitado editado en la tabla es el mismo de la búsqueda actual, actualizar panel
             if (invitadoActual && invitadoActual.id === invitados[index].id) {
                 invitadoActual.real = invitados[index].real;
                 document.getElementById('realInput').value = invitadoActual.real;
@@ -286,7 +285,6 @@
             if (idx !== -1) {
                 invitados[idx].real = realVal;
                 renderApp();
-                // Limpiar el buscador para la siguiente persona
                 document.getElementById('searchInput').value = "";
                 document.getElementById('searchInput').focus();
                 realizarBusqueda();
@@ -294,7 +292,6 @@
         }
 
         function actualizarIngresoActual() {
-            // Esta función solo actualiza el estado del panel en tiempo real mientras escribe
             actualizarEstadoPanel();
         }
 
@@ -310,13 +307,13 @@
             } else if (real < esperado) {
                 let diff = esperado - real;
                 box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-amber-400 text-slate-950 shadow-lg font-extrabold";
-                box.innerText = `⚠️ FALTANTE (-${diff}) -> Esperados: ${esperado}, Presentes:${real}`;
+                box.innerText = `⚠️ FALTANTE (-${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
             } else if (real > esperado) {
                 let diff = real - esperado;
                 box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-red-600 text-white shadow-lg font-extrabold";
-                box.innerText = `🚨 ¡EXCESO! (+${diff}) -> Esperados: ${esperado}, Presentes:${real}`;
+                box.innerText = `🚨 ¡EXCESO! (+${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
             } else {
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-emerald-500 text-slate-950 shadow-lg font-extrabold`;
+                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-emerald-500 text-slate-950 shadow-lg font-extrabold";
                 box.innerText = `✅ EXACTO -> Asistencia completa (${real}/${esperado})`;
             }
         }
@@ -325,6 +322,7 @@
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
+
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);

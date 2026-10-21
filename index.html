@@ -51,7 +51,33 @@
             </div>
         </section>
 
-        <!-- Panel de Búsqueda y Registro Rápido -->
+        <!-- Tabla General de Invitados con Alertas de Colores en el Renglón -->
+        <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-slate-200">📋 Lista General de Invitados y Control</h2>
+                <span id="totalRegistros" class="text-xs text-slate-400">Total: 34 registros</span>
+            </div>
+            
+            <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[500px]">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead class="bg-slate-900 text-slate-300 sticky top-0 uppercase text-xs tracking-wider z-10">
+                        <tr>
+                            <th class="p-3 text-center">ID</th>
+                            <th class="p-3">Nombre / Grupo</th>
+                            <th class="p-3 text-center">Lista</th>
+                            <th class="p-3">Mesa Asignada</th>
+                            <th class="p-3 text-center">Real Ingresa</th>
+                            <th class="p-3 text-center">Estado / Alerta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaInvitadosBody" class="divide-y divide-slate-700/60 bg-slate-800/50">
+                        <!-- Se llena con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Panel de Búsqueda y Registro Rápido (Movido al final) -->
         <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-slate-700 pb-3">
                 <h2 class="text-lg font-semibold text-indigo-300 flex items-center gap-2">
@@ -93,32 +119,6 @@
 
             <div id="estadoBox" class="p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700">
                 ⏳ Ingrese un ID o Nombre para registrar llegada
-            </div>
-        </section>
-
-        <!-- Tabla General de Invitados con Alertas de Colores -->
-        <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-3">
-            <div class="flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-slate-200">📋 Lista General de Invitados y Control</h2>
-                <span id="totalRegistros" class="text-xs text-slate-400">Total: 34 registros</span>
-            </div>
-            
-            <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[500px]">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead class="bg-slate-900 text-slate-300 sticky top-0 uppercase text-xs tracking-wider z-10">
-                        <tr>
-                            <th class="p-3 text-center">ID</th>
-                            <th class="p-3">Nombre / Grupo</th>
-                            <th class="p-3 text-center">Lista</th>
-                            <th class="p-3">Mesa Asignada</th>
-                            <th class="p-3 text-center">Real Ingresa</th>
-                            <th class="p-3 text-center">Estado / Alerta</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaInvitadosBody" class="divide-y divide-slate-700/60 bg-slate-800/50">
-                        <!-- Se llena con JavaScript -->
-                    </tbody>
-                </table>
             </div>
         </section>
 
@@ -176,31 +176,28 @@
             
             invitados.forEach((inv, index) => {
                 let estadoBadge = '';
-                let trClass = "hover:bg-slate-700/50 transition";
+                let rowBgColor = "hover:bg-slate-700/50 transition border-b border-slate-700/60";
                 
                 if (inv.real === 0) {
                     estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-slate-700 text-slate-300 font-medium">⏳ Pendiente</span>`;
                 } else if (inv.real < inv.lista) {
                     let diff = inv.lista - inv.real;
-                    // Faltante en AMARILLO
                     estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-amber-400 text-slate-950 font-extrabold shadow-md animate-pulse">⚠️ Faltante (-${diff})</span>`;
-                    trClass += " bg-amber-950/20";
+                    rowBgColor = "bg-amber-950/30 hover:bg-amber-950/40 transition border-b border-amber-900";
                 } else if (inv.real > inv.lista) {
                     let diff = inv.real - inv.lista;
-                    // Exceso en ROJO
-                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-red-600 text-white font-extrabold shadow-md animate-bounce">🚨 ¡Exceso! (+${diff})</span>`;
-                    trClass += " bg-red-950/30";
+                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-red-600 text-white font-extrabold shadow-md animate-bounce">🚨 Exceso (+${diff})</span>`;
+                    rowBgColor = "bg-red-950/40 hover:bg-red-950/50 transition border-b border-red-900";
                 } else {
-                    // Exacto en VERDE
                     estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-emerald-500 text-slate-950 font-extrabold shadow-md">✅ Exacto</span>`;
-                    trClass += " bg-emerald-950/20";
+                    rowBgColor = "bg-emerald-950/30 hover:bg-emerald-950/40 transition border-b border-emerald-900";
                 }
 
                 let tr = document.createElement('tr');
-                tr.className = trClass;
+                tr.className = rowBgColor;
                 tr.innerHTML = `
                     <td class="p-3 text-center font-mono font-bold text-amber-400">${inv.id}</td>
-                    <td class="p-3 font-medium">${inv.nombre}</td>
+                    <td class="p-3 font-medium text-slate-100">${inv.nombre}</td>
                     <td class="p-3 text-center font-bold text-cyan-200">${inv.lista}</td>
                     <td class="p-3 text-cyan-300 text-xs">${inv.mesa}</td>
                     <td class="p-3 text-center">

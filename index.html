@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Control de Ingreso de Invitados</title>
+    <title>Control de Ingreso y Asistencia Avanzado</title>
     <!-- Tailwind CSS para diseño moderno y móvil -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- SheetJS para leer archivos Excel (.xlsx) directamente en el navegador -->
@@ -15,33 +15,51 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-3 md:p-6">
 
-    <div class="max-w-4xl mx-auto space-y-5">
+    <div class="max-w-5xl mx-auto space-y-6">
         
         <!-- Header -->
         <header class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-5 shadow-xl text-center relative overflow-hidden">
-            <h1 class="text-2xl md:text-3xl font-bold tracking-tight">🎉 Control de Ingreso Rápido</h1>
-            <p class="text-blue-200 text-sm mt-1">Sistema Inteligente de Asistencia y Mesas</p>
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight">🎉 Control de Ingreso y Asistencia</h1>
+            <p class="text-blue-200 text-sm mt-1">Gestión de Mesas, Ingresos Reales y Faltantes con Alertas en Vivo</p>
             
-            <!-- Botón para Cargar Excel -->
             <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <label class="cursor-pointer bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm">
-                    📁 Cargar Lista Excel (.xlsx)
+                    📁 Cargar Nueva Lista Excel (.xlsx)
                     <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="hidden" onchange="cargarExcel(event)">
                 </label>
-                <span id="fileStatus" class="text-xs text-blue-300 italic">Usando lista predeterminada (34 invitados)</span>
+                <span id="fileStatus" class="text-xs text-blue-300 italic">Lista predeterminada activa (34 invitados)</span>
             </div>
         </header>
 
-        <!-- Panel de Búsqueda y Registro (Foco Móvil) -->
+        <!-- Panel de Estadísticas Generales (Resumen) -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow">
+                <span class="block text-xs text-slate-400">Total Grupos / Invitados</span>
+                <span id="statTotalGrupos" class="text-xl font-bold text-white">34</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow">
+                <span class="block text-xs text-slate-400">Personas Esperadas</span>
+                <span id="statEsperadas" class="text-xl font-bold text-cyan-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow">
+                <span class="block text-xs text-slate-400">Personas Ingresadas (Real)</span>
+                <span id="statIngresadas" class="text-xl font-bold text-emerald-400">0</span>
+            </div>
+            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow">
+                <span class="block text-xs text-slate-400">Faltan por Llegar</span>
+                <span id="statFaltantesTotal" class="text-xl font-bold text-amber-400">0</span>
+            </div>
+        </section>
+
+        <!-- Panel de Búsqueda y Registro Rápido -->
         <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-slate-700 pb-3">
                 <h2 class="text-lg font-semibold text-indigo-300 flex items-center gap-2">
-                    🔍 Panel de Búsqueda y Registro
+                    🔍 Búsqueda y Registro Rápido en Entrada
                 </h2>
-                <span class="text-xs bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-800">Modo Activo</span>
+                <span class="text-xs bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-800">En Vivo</span>
             </div>
 
-            <!-- Input de Búsqueda -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Buscar por ID o Nombre:</label>
@@ -53,11 +71,11 @@
                     <label class="block text-xs font-medium text-slate-400 mb-1">Cantidad Real que Ingresa:</label>
                     <input type="number" id="realInput" value="0" min="0" 
                            class="w-full bg-slate-900 text-white font-bold px-4 py-3 rounded-xl border-2 border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner text-center text-lg"
-                           oninput="actualizarEstado()">
+                           oninput="actualizarIngresoActual()">
                 </div>
             </div>
 
-            <!-- Resultados Dinámicos en Tarjetas -->
+            <!-- Resultados en Tarjetas -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                 <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
                     <span class="block text-xs text-slate-400">Nombre Confirmado</span>
@@ -73,28 +91,28 @@
                 </div>
             </div>
 
-            <!-- Alerta / Estado Dinámico -->
             <div id="estadoBox" class="p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700">
-                ⏳ Ingrese un ID o Nombre para comenzar
+                ⏳ Ingrese un ID o Nombre para registrar llegada
             </div>
         </section>
 
-        <!-- Tabla de Invitados General -->
+        <!-- Tabla General de Invitados con Alertas de Colores -->
         <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-3">
-            <h2 class="text-lg font-semibold text-slate-200 flex items-center justify-between">
-                <span>📋 Lista General de Invitados</span>
-                <span id="totalInvitados" class="text-xs text-slate-400 font-normal">Total: 34 registros</span>
-            </h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-slate-200">📋 Lista General de Invitados y Control</h2>
+                <span id="totalRegistros" class="text-xs text-slate-400">Total: 34 registros</span>
+            </div>
             
-            <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-96">
+            <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[500px]">
                 <table class="w-full text-left border-collapse text-sm">
-                    <thead class="bg-slate-900 text-slate-300 sticky top-0 uppercase text-xs tracking-wider">
+                    <thead class="bg-slate-900 text-slate-300 sticky top-0 uppercase text-xs tracking-wider z-10">
                         <tr>
                             <th class="p-3 text-center">ID</th>
                             <th class="p-3">Nombre / Grupo</th>
                             <th class="p-3 text-center">Lista</th>
                             <th class="p-3">Mesa Asignada</th>
-                            <th class="p-3 text-center">Estado</th>
+                            <th class="p-3 text-center">Real Ingresa</th>
+                            <th class="p-3 text-center">Estado / Alerta</th>
                         </tr>
                     </thead>
                     <tbody id="tablaInvitadosBody" class="divide-y divide-slate-700/60 bg-slate-800/50">
@@ -107,62 +125,116 @@
     </div>
 
     <script>
-        // Datos por defecto (los mismos de tu archivo)
         let invitados = [
-            {id: 1, nombre: "Kathleen", lista: 6, mesa: "Mesa 18"},
-            {id: 2, nombre: "Merelyn Jarquín", lista: 6, mesa: "Mesa 12"},
-            {id: 3, nombre: "Benjamín Alcázar", lista: 3, mesa: "Mesa 20"},
-            {id: 4, nombre: "Ashley Jarquín", lista: 7, mesa: "Mesa 10"},
-            {id: 5, nombre: "Ana Marina Romero", lista: 5, mesa: "Mesa 16"},
-            {id: 6, nombre: "Mary Paz", lista: 4, mesa: "Mesa 2"},
-            {id: 7, nombre: "Keren (Naomy Talavera)", lista: 4, mesa: "Mesa 17"},
-            {id: 8, nombre: "Jahaziel Zeledón", lista: 4, mesa: "Mesa 14"},
-            {id: 9, nombre: "Dilany Ocampo", lista: 4, mesa: "Mesa 2"},
-            {id: 10, nombre: "Aarón Salas Priscilla", lista: 3, mesa: "Mesa 11"},
-            {id: 11, nombre: "Tifany Soto", lista: 11, mesa: "Mesa 9 (10 p.) / Mesa 10 (1 p.)"},
-            {id: 12, nombre: "Emiliano Estrada", lista: 6, mesa: "Mesa 6"},
-            {id: 13, nombre: "April Brenes", lista: 12, mesa: "Mesa 1 (10 p.) / Mesa 2 (2 p.)"},
-            {id: 14, nombre: "Monserrat Alvarado", lista: 3, mesa: "Mesa 6"},
-            {id: 15, nombre: "Esnaider", lista: 6, mesa: "Mesa 19"},
-            {id: 16, nombre: "Gabriel Luna", lista: 4, mesa: "Mesa 12"},
-            {id: 17, nombre: "April Fonseca", lista: 12, mesa: "Mesa 3 (10 p.) / Mesa 5 (2 p.)"},
-            {id: 18, nombre: "Isaías Cortez", lista: 8, mesa: "Mesa 19"},
-            {id: 19, nombre: "Génesis Méndez", lista: 2, mesa: "Mesa 8"},
-            {id: 20, nombre: "Jazmín Fernández", lista: 4, mesa: "Mesa 12"},
-            {id: 21, nombre: "Brayan (Joelky Mata)", lista: 6, mesa: "Mesa 17"},
-            {id: 22, nombre: "David Villalobos", lista: 8, mesa: "Mesa 13"},
-            {id: 23, nombre: "Niña Anais", lista: 2, mesa: "Mesa 8"},
-            {id: 24, nombre: "Mathias Orozco", lista: 5, mesa: "Mesa 16"},
-            {id: 25, nombre: "Kenet Cordero", lista: 3, mesa: "Mesa 5"},
-            {id: 26, nombre: "Niña Hillary", lista: 1, mesa: "Mesa 8"},
-            {id: 27, nombre: "Alessandro", lista: 12, mesa: "Mesa 4 (10 p.) / Mesa 5 (2 p.)"},
-            {id: 28, nombre: "Daniela Quesada", lista: 7, mesa: "Mesa 11"},
-            {id: 29, nombre: "Aarón López", lista: 3, mesa: "Mesa 20"},
-            {id: 30, nombre: "Aarón Silva", lista: 4, mesa: "Mesa 15"},
-            {id: 31, nombre: "Thiago Montenegro", lista: 3, mesa: "Mesa 20"},
-            {id: 32, nombre: "Santiago Munguía Arce", lista: 4, mesa: "Mesa 15"},
-            {id: 33, nombre: "Maestros Extra", lista: 4, mesa: "Mesa 8"},
-            {id: 34, nombre: "Grupo de Patrocinio", lista: 9, mesa: "Mesa 7"}
+            {id: 1, nombre: "Kathleen", lista: 6, mesa: "Mesa 18", real: 0},
+            {id: 2, nombre: "Merelyn Jarquín", lista: 6, mesa: "Mesa 12", real: 0},
+            {id: 3, nombre: "Benjamín Alcázar", lista: 3, mesa: "Mesa 20", real: 0},
+            {id: 4, nombre: "Ashley Jarquín", lista: 7, mesa: "Mesa 10", real: 0},
+            {id: 5, nombre: "Ana Marina Romero", lista: 5, mesa: "Mesa 16", real: 0},
+            {id: 6, nombre: "Mary Paz", lista: 4, mesa: "Mesa 2", real: 0},
+            {id: 7, nombre: "Keren (Naomy Talavera)", lista: 4, mesa: "Mesa 17", real: 0},
+            {id: 8, nombre: "Jahaziel Zeledón", lista: 4, mesa: "Mesa 14", real: 0},
+            {id: 9, nombre: "Dilany Ocampo", lista: 4, mesa: "Mesa 2", real: 0},
+            {id: 10, nombre: "Aarón Salas Priscilla", lista: 3, mesa: "Mesa 11", real: 0},
+            {id: 11, nombre: "Tifany Soto", lista: 11, mesa: "Mesa 9 (10 p.) / Mesa 10 (1 p.)", real: 0},
+            {id: 12, nombre: "Emiliano Estrada", lista: 6, mesa: "Mesa 6", real: 0},
+            {id: 13, nombre: "April Brenes", lista: 12, mesa: "Mesa 1 (10 p.) / Mesa 2 (2 p.)", real: 0},
+            {id: 14, nombre: "Monserrat Alvarado", lista: 3, mesa: "Mesa 6", real: 0},
+            {id: 15, nombre: "Esnaider", lista: 6, mesa: "Mesa 19", real: 0},
+            {id: 16, nombre: "Gabriel Luna", lista: 4, mesa: "Mesa 12", real: 0},
+            {id: 17, nombre: "April Fonseca", lista: 12, mesa: "Mesa 3 (10 p.) / Mesa 5 (2 p.)", real: 0},
+            {id: 18, nombre: "Isaías Cortez", lista: 8, mesa: "Mesa 19", real: 0},
+            {id: 19, nombre: "Génesis Méndez", lista: 2, mesa: "Mesa 8", real: 0},
+            {id: 20, nombre: "Jazmín Fernández", lista: 4, mesa: "Mesa 12", real: 0},
+            {id: 21, nombre: "Brayan (Joelky Mata)", lista: 6, mesa: "Mesa 17", real: 0},
+            {id: 22, nombre: "David Villalobos", lista: 8, mesa: "Mesa 13", real: 0},
+            {id: 23, nombre: "Niña Anais", lista: 2, mesa: "Mesa 8", real: 0},
+            {id: 24, nombre: "Mathias Orozco", lista: 5, mesa: "Mesa 16", real: 0},
+            {id: 25, nombre: "Kenet Cordero", lista: 3, mesa: "Mesa 5", real: 0},
+            {id: 26, nombre: "Niña Hillary", lista: 1, mesa: "Mesa 8", real: 0},
+            {id: 27, nombre: "Alessandro", lista: 12, mesa: "Mesa 4 (10 p.) / Mesa 5 (2 p.)", real: 0},
+            {id: 28, nombre: "Daniela Quesada", lista: 7, mesa: "Mesa 11", real: 0},
+            {id: 29, nombre: "Aarón López", lista: 3, mesa: "Mesa 20", real: 0},
+            {id: 30, nombre: "Aarón Silva", lista: 4, mesa: "Mesa 15", real: 0},
+            {id: 31, nombre: "Thiago Montenegro", lista: 3, mesa: "Mesa 20", real: 0},
+            {id: 32, nombre: "Santiago Munguía Arce", lista: 4, mesa: "Mesa 15", real: 0},
+            {id: 33, nombre: "Maestros Extra", lista: 4, mesa: "Mesa 8", real: 0},
+            {id: 34, nombre: "Grupo de Patrocinio", lista: 9, mesa: "Mesa 7", real: 0}
         ];
 
         let invitadoActual = null;
 
+        function renderApp() {
+            renderTabla();
+            actualizarEstadisticas();
+            realizarBusqueda();
+        }
+
         function renderTabla() {
             const tbody = document.getElementById('tablaInvitadosBody');
             tbody.innerHTML = '';
-            invitados.forEach(inv => {
+            
+            invitados.forEach((inv, index) => {
+                let estadoBadge = '';
+                let trClass = "hover:bg-slate-700/50 transition";
+                
+                if (inv.real === 0) {
+                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-slate-700 text-slate-300 font-medium">⏳ Pendiente</span>`;
+                } else if (inv.real < inv.lista) {
+                    let diff = inv.lista - inv.real;
+                    // Faltante en AMARILLO
+                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-amber-400 text-slate-950 font-extrabold shadow-md animate-pulse">⚠️ Faltante (-${diff})</span>`;
+                    trClass += " bg-amber-950/20";
+                } else if (inv.real > inv.lista) {
+                    let diff = inv.real - inv.lista;
+                    // Exceso en ROJO
+                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-red-600 text-white font-extrabold shadow-md animate-bounce">🚨 ¡Exceso! (+${diff})</span>`;
+                    trClass += " bg-red-950/30";
+                } else {
+                    // Exacto en VERDE
+                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-emerald-500 text-slate-950 font-extrabold shadow-md">✅ Exacto</span>`;
+                    trClass += " bg-emerald-950/20";
+                }
+
                 let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-700/50 transition";
+                tr.className = trClass;
                 tr.innerHTML = `
                     <td class="p-3 text-center font-mono font-bold text-amber-400">${inv.id}</td>
                     <td class="p-3 font-medium">${inv.nombre}</td>
-                    <td class="p-3 text-center">${inv.lista}</td>
-                    <td class="p-3 text-cyan-300">${inv.mesa}</td>
-                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs bg-slate-700 text-slate-300">Pendiente</span></td>
+                    <td class="p-3 text-center font-bold text-cyan-200">${inv.lista}</td>
+                    <td class="p-3 text-cyan-300 text-xs">${inv.mesa}</td>
+                    <td class="p-3 text-center">
+                        <input type="number" min="0" value="${inv.real}" 
+                               class="w-20 bg-slate-900 text-white font-bold text-center px-2 py-1.5 rounded-lg border border-slate-600 focus:ring-2 focus:ring-indigo-500 shadow-inner"
+                               onchange="actualizarRealTabla(${index}, this.value)">
+                    </td>
+                    <td class="p-3 text-center">${estadoBadge}</td>
                 `;
                 tbody.appendChild(tr);
             });
-            document.getElementById('totalInvitados').innerText = `Total: ${invitados.length} registros`;
+            document.getElementById('totalRegistros').innerText = `Total: ${invitados.length} registros`;
+        }
+
+        function actualizarRealTabla(index, value) {
+            invitados[index].real = parseInt(value) || 0;
+            renderTabla();
+            actualizarEstadisticas();
+            if (invitadoActual && invitadoActual.id === invitados[index].id) {
+                document.getElementById('realInput').value = invitados[index].real;
+                actualizarEstadoPanel();
+            }
+        }
+
+        function actualizarEstadisticas() {
+            let totalGrupos = invitados.length;
+            let totalEsperadas = invitados.reduce((sum, i) => sum + i.lista, 0);
+            let totalIngresadas = invitados.reduce((sum, i) => sum + i.real, 0);
+            let faltantes = totalEsperadas - totalIngresadas;
+
+            document.getElementById('statTotalGrupos').innerText = totalGrupos;
+            document.getElementById('statEsperadas').innerText = totalEsperadas;
+            document.getElementById('statIngresadas').innerText = totalIngresadas;
+            document.getElementById('statFaltantesTotal').innerText = faltantes > 0 ? faltantes : 0;
         }
 
         function realizarBusqueda() {
@@ -173,7 +245,7 @@
                 document.getElementById('resLista').innerText = "-";
                 document.getElementById('resMesa').innerText = "-";
                 document.getElementById('estadoBox').className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700";
-                document.getElementById('estadoBox').innerText = "⏳ Ingrese un ID o Nombre para comenzar";
+                document.getElementById('estadoBox').innerText = "⏳ Ingrese un ID o Nombre para registrar llegada";
                 return;
             }
 
@@ -184,8 +256,8 @@
                 document.getElementById('resNombre').innerText = encontrado.nombre;
                 document.getElementById('resLista').innerText = encontrado.lista;
                 document.getElementById('resMesa').innerText = encontrado.mesa;
-                document.getElementById('realInput').value = encontrado.lista;
-                actualizarEstado();
+                document.getElementById('realInput').value = encontrado.real;
+                actualizarEstadoPanel();
             } else {
                 invitadoActual = null;
                 document.getElementById('resNombre').innerText = "No encontrado";
@@ -197,9 +269,24 @@
             }
         }
 
-        function actualizarEstado() {
+        function actualizarIngresoActual() {
             if (!invitadoActual) return;
-            const real = parseInt(document.getElementById('realInput').value) || 0;
+            const realVal = parseInt(document.getElementById('realInput').value) || 0;
+            invitadoActual.real = realVal;
+            
+            let idx = invitados.findIndex(i => i.id === invitadoActual.id);
+            if (idx !== -1) {
+                invitados[idx].real = realVal;
+            }
+
+            renderTabla();
+            actualizarEstadisticas();
+            actualizarEstadoPanel();
+        }
+
+        function actualizarEstadoPanel() {
+            if (!invitadoActual) return;
+            const real = invitadoActual.real;
             const esperado = invitadoActual.lista;
             const box = document.getElementById('estadoBox');
 
@@ -208,14 +295,14 @@
                 box.innerText = "⏳ Pendiente de confirmar asistencia";
             } else if (real < esperado) {
                 let diff = esperado - real;
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-amber-500/20 text-amber-300 border border-amber-500 shadow-lg animate-pulse";
+                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-amber-400 text-slate-950 shadow-lg font-extrabold";
                 box.innerText = `⚠️ FALTANTE (-${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
             } else if (real > esperado) {
                 let diff = real - esperado;
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-red-600/30 text-red-300 border border-red-500 shadow-lg animate-bounce";
+                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-red-600 text-white shadow-lg font-extrabold";
                 box.innerText = `🚨 ¡EXCESO! (+${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
             } else {
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-emerald-600/30 text-emerald-300 border border-emerald-500 shadow-lg";
+                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-emerald-500 text-slate-950 shadow-lg font-extrabold";
                 box.innerText = `✅ EXACTO -> Asistencia completa (${real}/${esperado})`;
             }
         }
@@ -240,13 +327,14 @@
                                 id: row[0],
                                 nombre: row[1],
                                 lista: parseInt(row[2]) || 1,
-                                mesa: row[3] || "Sin Asignar"
+                                mesa: row[3] || "Sin Asignar",
+                                real: 0
                             });
                         }
                     }
                     if (nuevaLista.length > 0) {
                         invitados = nuevaLista;
-                        renderTabla();
+                        renderApp();
                         document.getElementById('fileStatus').innerText = `✅ Cargado: ${file.name} (${invitados.length} invitados)`;
                         document.getElementById('fileStatus').className = "text-xs text-emerald-400 font-bold italic";
                     } else {
@@ -260,8 +348,7 @@
             reader.readAsArrayBuffer(file);
         }
 
-        window.onload = renderTabla;
+        window.onload = renderApp;
     </script>
 </body>
 </html>
-

@@ -3,45 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Ingreso y Asistencia Avanzado</title>
-    <!-- Tailwind CSS para diseño moderno y móvil -->
+    <title>Lista de Invitados Fantasy - Control de Asistencia</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- SheetJS para leer archivos Excel (.xlsx) directamente en el navegador -->
+    <!-- SheetJS para Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-3 md:p-6">
+<body class="bg-slate-900 text-slate-100 min-h-screen p-2 sm:p-4 md:p-6">
 
-    <div class="max-w-5xl mx-auto space-y-6">
+    <div class="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+
+        <!-- Header / Título Principal -->
+        <header class="bg-gradient-to-r from-blue-700 via-indigo-800 to-purple-900 rounded-2xl p-4 sm:p-6 shadow-2xl text-center border border-indigo-500/30">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white drop-shadow-md">
+                ✨ Lista de Invitados Fantasy ✨
+            </h1>
+            <p class="text-indigo-200 text-xs sm:text-sm mt-1 font-medium">Control de Ingreso y Asistencia en Tiempo Real</p>
+        </header>
 
         <!-- Panel de Búsqueda y Registro Rápido -->
-        <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-                <h2 class="text-lg font-semibold text-indigo-300 flex items-center gap-2">
-                    🔍 Búsqueda y Registro Rápido en Entrada
+        <section class="bg-slate-800/95 backdrop-blur border border-slate-700 rounded-2xl p-3 sm:p-5 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-700/85 pb-2.5">
+                <h2 class="text-base sm:text-lg font-bold text-indigo-300 flex items-center gap-2">
+                    🔍 Búsqueda y Registro Rápido
                 </h2>
-                <span class="text-xs bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-800">En Vivo</span>
+                <span class="text-[10px] sm:text-xs bg-indigo-950 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-800 font-semibold">En Vivo</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Buscar por ID o Nombre:</label>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Buscar por ID o Nombre:</label>
                     <input type="text" id="searchInput" placeholder="Ej. 1 o Kathleen..." 
-                           class="w-full bg-amber-50 text-slate-900 font-bold px-4 py-3 rounded-xl border-2 border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-inner"
+                           class="w-full bg-amber-50 text-slate-900 font-bold px-3 py-2.5 rounded-xl border-2 border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-inner text-sm"
                            oninput="realizarBusqueda()"
                            onkeydown="if(event.key==='Enter') document.getElementById('realInput').focus()">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Cantidad Real que Ingresa:</label>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Cantidad Real que Ingresa:</label>
                     <div class="flex gap-2">
                         <input type="number" id="realInput" value="0" min="0" 
-                               class="w-full bg-slate-900 text-white font-bold px-4 py-3 rounded-xl border-2 border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner text-center text-lg"
+                               class="w-full bg-slate-900 text-white font-bold px-3 py-2.5 rounded-xl border-2 border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner text-center text-base"
                                oninput="actualizarIngresoActual()"
                                onkeydown="if(event.key==='Enter') confirmarIngreso()">
-                        <button onclick="confirmarIngreso()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-3 rounded-xl shadow transition flex items-center justify-center">
+                        <button onclick="confirmarIngreso()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl shadow transition text-sm flex items-center justify-center cursor-pointer">
                             Aceptar
                         </button>
                     </div>
@@ -49,83 +57,83 @@
             </div>
 
             <!-- Resultados en Tarjetas -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
-                    <span class="block text-xs text-slate-400">Nombre Confirmado</span>
-                    <span id="resNombre" class="text-base font-bold text-amber-400">-</span>
+            <div class="grid grid-cols-3 gap-2 pt-1">
+                <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-700/80 text-center">
+                    <span class="block text-[10px] sm:text-xs text-slate-400">Nombre Confirmado</span>
+                    <span id="resNombre" class="text-xs sm:text-base font-bold text-amber-400 truncate block">-</span>
                 </div>
-                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
-                    <span class="block text-xs text-slate-400">Asistentes en Lista</span>
-                    <span id="resLista" class="text-base font-bold text-emerald-400">-</span>
+                <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-700/80 text-center">
+                    <span class="block text-[10px] sm:text-xs text-slate-400">En Lista</span>
+                    <span id="resLista" class="text-xs sm:text-base font-bold text-emerald-400 block">-</span>
                 </div>
-                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-center">
-                    <span class="block text-xs text-slate-400">Mesa Asignada</span>
-                    <span id="resMesa" class="text-base font-bold text-cyan-400">-</span>
+                <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-700/80 text-center">
+                    <span class="block text-[10px] sm:text-xs text-slate-400">Mesa Asignada</span>
+                    <span id="resMesa" class="text-xs sm:text-base font-bold text-cyan-400 truncate block">-</span>
                 </div>
             </div>
 
-            <div id="estadoBox" class="p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700">
+            <div id="estadoBox" class="p-3 rounded-xl text-center font-bold text-xs sm:text-sm transition-all bg-slate-900 text-slate-300 border border-slate-700">
                 ⏳ Ingrese un ID o Nombre para registrar llegada
             </div>
         </section>
 
-        <!-- Panel de Estadísticas Generales (Resumen) -->
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow">
-                <span class="block text-xs text-slate-400">Total Grupos / Invitados</span>
-                <span id="statTotalGrupos" class="text-xl font-bold text-white">34</span>
+        <!-- Panel de Estadísticas Generales -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            <div class="bg-slate-800/90 border border-slate-700/80 p-3 rounded-xl text-center shadow">
+                <span class="block text-[10px] sm:text-xs text-slate-400">Total Grupos</span>
+                <span id="statTotalGrupos" class="text-lg sm:text-xl font-bold text-white">34</span>
             </div>
-            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow">
-                <span class="block text-xs text-slate-400">Personas Esperadas</span>
-                <span id="statEsperadas" class="text-xl font-bold text-cyan-400">0</span>
+            <div class="bg-slate-800/90 border border-slate-700/80 p-3 rounded-xl text-center shadow">
+                <span class="block text-[10px] sm:text-xs text-slate-400">Personas Esperadas</span>
+                <span id="statEsperadas" class="text-lg sm:text-xl font-bold text-cyan-400">0</span>
             </div>
-            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow">
-                <span class="block text-xs text-slate-400">Personas Ingresadas (Real)</span>
-                <span id="statIngresadas" class="text-xl font-bold text-emerald-400">0</span>
+            <div class="bg-slate-800/90 border border-slate-700/80 p-3 rounded-xl text-center shadow">
+                <span class="block text-[10px] sm:text-xs text-slate-400">Ingresadas (Real)</span>
+                <span id="statIngresadas" class="text-lg sm:text-xl font-bold text-emerald-400">0</span>
             </div>
-            <div class="bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow">
-                <span class="block text-xs text-slate-400">Faltan por Llegar</span>
-                <span id="statFaltantesTotal" class="text-xl font-bold text-amber-400">0</span>
+            <div class="bg-slate-800/90 border border-slate-700/80 p-3 rounded-xl text-center shadow">
+                <span class="block text-[10px] sm:text-xs text-slate-400">Faltan por Llegar</span>
+                <span id="statFaltantesTotal" class="text-lg sm:text-xl font-bold text-amber-400">0</span>
             </div>
         </section>
 
-        <!-- Tabla General de Invitados con Alertas de Colores en el Renglón -->
-        <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl space-y-3">
+        <!-- Tabla General Ajustada sin Scroll Horizontal -->
+        <section class="bg-slate-800/90 backdrop-blur border border-slate-700 rounded-2xl p-3 sm:p-5 shadow-2xl space-y-2.5">
             <div class="flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-slate-200">📋 Lista General de Invitados y Control</h2>
-                <span id="totalRegistros" class="text-xs text-slate-400">Total: 34 registros</span>
+                <h2 class="text-base sm:text-lg font-bold text-slate-200">📋 Lista General de Invitados</h2>
+                <span id="totalRegistros" class="text-[10px] sm:text-xs text-slate-400">Total: 34 registros</span>
             </div>
             
-            <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[400px]">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead class="bg-slate-900 text-slate-300 sticky top-0 uppercase text-xs tracking-wider z-10">
+            <div class="rounded-xl border border-slate-700/80 overflow-y-auto max-h-[420px]">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm table-fixed">
+                    <thead class="bg-slate-900 text-slate-300 sticky top-0 uppercase text-[10px] sm:text-xs tracking-wider z-10">
                         <tr>
-                            <th class="p-2 text-center">ID</th>
-                            <th class="p-2">Nombre / Grupo</th>
-                            <th class="p-2 text-center">Lista</th>
-                            <th class="p-2">Mesa Asignada</th>
-                            <th class="p-2 text-center w-24">Real Ingresa</th>
-                            <th class="p-2 text-center">Estado / Alerta</th>
+                            <th class="p-1.5 sm:p-2 text-center w-[8%]">ID</th>
+                            <th class="p-1.5 sm:p-2 w-[34%]">Nombre / Grupo</th>
+                            <th class="p-1.5 sm:p-2 text-center w-[8%]">Lista</th>
+                            <th class="p-1.5 sm:p-2 w-[22%]">Mesa</th>
+                            <th class="p-1.5 sm:p-2 text-center w-[12%]">Real</th>
+                            <th class="p-1.5 sm:p-2 text-center w-[16%]">Estado</th>
                         </tr>
                     </thead>
                     <tbody id="tablaInvitadosBody" class="divide-y divide-slate-700/60 bg-slate-800/50">
-                        <!-- Se llena con JavaScript -->
+                        <!-- Se llena dinámicamente -->
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Sección de Carga de Excel (Al final) -->
-        <footer class="bg-slate-800/90 border border-slate-700 rounded-2xl p-5 shadow-xl text-center overflow-hidden">
-            <h1 class="text-xl font-bold tracking-tight text-white">Administración de Listas</h1>
-            <p class="text-slate-400 text-sm mt-1">Sube aquí una base de datos actualizada para el evento</p>
+        <!-- Administración de Listas Excel -->
+        <footer class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 shadow-xl text-center">
+            <h3 class="text-sm sm:text-base font-bold text-white">Administración de Listas</h3>
+            <p class="text-slate-400 text-xs mt-0.5">Sube aquí una base de datos actualizada para el evento (.xlsx)</p>
             
-            <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <label class="cursor-pointer bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold px-4 py-2 rounded-xl shadow transition flex items-center gap-2 text-sm">
-                    📁 Cargar Nueva Lista Excel (.xlsx)
+            <div class="mt-3 flex flex-col sm:flex-row items-center justify-center gap-2">
+                <label class="cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-xl shadow transition text-xs flex items-center gap-2">
+                    📁 Cargar Nueva Lista Excel
                     <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" class="hidden" onchange="cargarExcel(event)">
                 </label>
-                <span id="fileStatus" class="text-xs text-blue-300 italic">Lista predeterminada activa (34 invitados)</span>
+                <span id="fileStatus" class="text-[10px] sm:text-xs text-blue-300 italic">Lista predeterminada activa</span>
             </div>
         </footer>
 
@@ -143,13 +151,13 @@
             {id: 8, nombre: "Jahaziel Zeledón", lista: 4, mesa: "Mesa 14", real: 0},
             {id: 9, nombre: "Dilany Ocampo", lista: 4, mesa: "Mesa 2", real: 0},
             {id: 10, nombre: "Aarón Salas Priscilla", lista: 3, mesa: "Mesa 11", real: 0},
-            {id: 11, nombre: "Tifany Soto", lista: 11, mesa: "Mesa 9 (10 p.) / Mesa 10 (1 p.)", real: 0},
+            {id: 11, nombre: "Tifany Soto", lista: 11, mesa: "Mesa 9 / Mesa 10", real: 0},
             {id: 12, nombre: "Emiliano Estrada", lista: 6, mesa: "Mesa 6", real: 0},
-            {id: 13, nombre: "April Brenes", lista: 12, mesa: "Mesa 1 (10 p.) / Mesa 2 (2 p.)", real: 0},
+            {id: 13, nombre: "April Brenes", lista: 12, mesa: "Mesa 1 / Mesa 2", real: 0},
             {id: 14, nombre: "Monserrat Alvarado", lista: 3, mesa: "Mesa 6", real: 0},
             {id: 15, nombre: "Esnaider", lista: 6, mesa: "Mesa 19", real: 0},
             {id: 16, nombre: "Gabriel Luna", lista: 4, mesa: "Mesa 12", real: 0},
-            {id: 17, nombre: "April Fonseca", lista: 12, mesa: "Mesa 3 (10 p.) / Mesa 5 (2 p.)", real: 0},
+            {id: 17, nombre: "April Fonseca", lista: 12, mesa: "Mesa 3 / Mesa 5", real: 0},
             {id: 18, nombre: "Isaías Cortez", lista: 8, mesa: "Mesa 19", real: 0},
             {id: 19, nombre: "Génesis Méndez", lista: 2, mesa: "Mesa 8", real: 0},
             {id: 20, nombre: "Jazmín Fernández", lista: 4, mesa: "Mesa 12", real: 0},
@@ -159,7 +167,7 @@
             {id: 24, nombre: "Mathias Orozco", lista: 5, mesa: "Mesa 16", real: 0},
             {id: 25, nombre: "Kenet Cordero", lista: 3, mesa: "Mesa 5", real: 0},
             {id: 26, nombre: "Niña Hillary", lista: 1, mesa: "Mesa 8", real: 0},
-            {id: 27, nombre: "Alessandro", lista: 12, mesa: "Mesa 4 (10 p.) / Mesa 5 (2 p.)", real: 0},
+            {id: 27, nombre: "Alessandro", lista: 12, mesa: "Mesa 4 / Mesa 5", real: 0},
             {id: 28, nombre: "Daniela Quesada", lista: 7, mesa: "Mesa 11", real: 0},
             {id: 29, nombre: "Aarón López", lista: 3, mesa: "Mesa 20", real: 0},
             {id: 30, nombre: "Aarón Silva", lista: 4, mesa: "Mesa 15", real: 0},
@@ -186,33 +194,34 @@
                 let rowBgColor = "hover:bg-slate-700/50 transition border-b border-slate-700/60";
                 
                 if (inv.real === 0) {
-                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-slate-700 text-slate-300 font-medium">⏳ Pendiente</span>`;
+                    estadoBadge = `<span class="px-1.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-slate-700 text-slate-300 font-medium whitespace-nowrap">⏳ Pendiente</span>`;
                 } else if (inv.real < inv.lista) {
                     let diff = inv.lista - inv.real;
-                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-amber-400 text-slate-950 font-extrabold shadow-md animate-pulse">⚠️ Faltante (-${diff})</span>`;
+                    estadoBadge = `<span class="px-1.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-amber-400 text-slate-950 font-black shadow-md animate-pulse whitespace-nowrap">⚠️ -${diff}</span>`;
                     rowBgColor = "bg-amber-950/30 hover:bg-amber-950/40 transition border-b border-amber-900";
                 } else if (inv.real > inv.lista) {
                     let diff = inv.real - inv.lista;
-                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-red-600 text-white font-extrabold shadow-md animate-bounce">🚨 Exceso (+${diff})</span>`;
+                    estadoBadge = `<span class="px-1.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-red-600 text-white font-black shadow-md animate-bounce whitespace-nowrap">🚨 +${diff}</span>`;
                     rowBgColor = "bg-red-950/40 hover:bg-red-950/50 transition border-b border-red-900";
                 } else {
-                    estadoBadge = `<span class="px-3 py-1 rounded-full text-xs bg-emerald-500 text-slate-950 font-extrabold shadow-md">✅ Exacto</span>`;
-                    rowBgColor = "bg-emerald-950/30 hover:bg-emerald-950/40 transition border-b border-emerald-900";
+                    /* Verde neón llamativo y brillante */
+                    estadoBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs bg-emerald-400 text-slate-950 font-black shadow-[0_0_12px_rgba(52,211,153,0.8)] border border-emerald-300 whitespace-nowrap">✅ Exacto</span>`;
+                    rowBgColor = "bg-emerald-950/40 hover:bg-emerald-950/50 transition border-b border-emerald-800/80";
                 }
 
                 let tr = document.createElement('tr');
                 tr.className = rowBgColor;
                 tr.innerHTML = `
-                    <td class="p-2 text-center font-mono font-bold text-amber-400">${inv.id}</td>
-                    <td class="p-2 font-medium text-slate-100">${inv.nombre}</td>
-                    <td class="p-2 text-center font-bold text-cyan-200">${inv.lista}</td>
-                    <td class="p-2 text-cyan-300 text-xs">${inv.mesa}</td>
-                    <td class="p-2 text-center">
+                    <td class="p-1.5 sm:p-2 text-center font-mono font-bold text-amber-400 text-xs">${inv.id}</td>
+                    <td class="p-1.5 sm:p-2 font-semibold text-slate-100 truncate text-xs sm:text-sm" title="${inv.nombre}">${inv.nombre}</td>
+                    <td class="p-1.5 sm:p-2 text-center font-bold text-cyan-200 text-xs sm:text-sm">${inv.lista}</td>
+                    <td class="p-1.5 sm:p-2 text-cyan-300 text-[11px] sm:text-xs truncate" title="${inv.mesa}">${inv.mesa}</td>
+                    <td class="p-1.5 sm:p-2 text-center">
                         <input type="number" min="0" value="${inv.real}" 
-                               class="w-20 bg-slate-900 text-white font-bold text-center px-2 py-1.5 rounded-lg border border-slate-600 focus:ring-2 focus:ring-indigo-500 shadow-inner"
+                               class="w-12 sm:w-16 bg-slate-900 text-white font-bold text-center px-1 py-1 rounded-lg border border-slate-600 focus:ring-2 focus:ring-indigo-500 text-xs sm:text-sm shadow-inner"
                                onchange="actualizarRealTabla(${index}, this.value)">
                     </td>
-                    <td class="p-2 text-center">${estadoBadge}</td>
+                    <td class="p-1.5 sm:p-2 text-center">${estadoBadge}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -251,7 +260,7 @@
                 document.getElementById('resLista').innerText = "-";
                 document.getElementById('resMesa').innerText = "-";
                 document.getElementById('realInput').value = 0;
-                document.getElementById('estadoBox').className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700";
+                document.getElementById('estadoBox').className = "p-3 rounded-xl text-center font-bold text-xs sm:text-sm transition-all bg-slate-900 text-slate-300 border border-slate-700";
                 document.getElementById('estadoBox').innerText = "⏳ Ingrese un ID o Nombre para registrar llegada";
                 return;
             }
@@ -272,7 +281,7 @@
                 document.getElementById('resMesa').innerText = "-";
                 document.getElementById('realInput').value = 0;
                 const box = document.getElementById('estadoBox');
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-amber-950/80 text-amber-300 border border-amber-600";
+                box.className = "p-3 rounded-xl text-center font-bold text-xs sm:text-sm transition-all bg-amber-950/80 text-amber-300 border border-amber-600";
                 box.innerText = "⚠️ Invitado no encontrado en la lista";
             }
         }
@@ -302,18 +311,18 @@
             const box = document.getElementById('estadoBox');
 
             if (real === 0) {
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-slate-900 text-slate-300 border border-slate-700";
+                box.className = "p-3 rounded-xl text-center font-bold text-xs sm:text-sm transition-all bg-slate-900 text-slate-300 border border-slate-700";
                 box.innerText = "⏳ Pendiente de confirmar asistencia";
             } else if (real < esperado) {
                 let diff = esperado - real;
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-amber-400 text-slate-950 shadow-lg font-extrabold";
+                box.className = "p-3 rounded-xl text-center font-bold text-xs sm:text-sm transition-all bg-amber-400 text-slate-950 shadow-lg font-black";
                 box.innerText = `⚠️ FALTANTE (-${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
             } else if (real > esperado) {
                 let diff = real - esperado;
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-red-600 text-white shadow-lg font-extrabold";
+                box.className = "p-3 rounded-xl text-center font-bold text-xs sm:text-sm transition-all bg-red-600 text-white shadow-lg font-black";
                 box.innerText = `🚨 ¡EXCESO! (+${diff}) -> Esperados: ${esperado}, Presentes: ${real}`;
             } else {
-                box.className = "p-4 rounded-xl text-center font-bold text-base transition-all bg-emerald-500 text-slate-950 shadow-lg font-extrabold";
+                box.className = "p-3 rounded-xl text-center font-bold text-xs sm:text-sm transition-all bg-emerald-400 text-slate-950 shadow-[0_0_15px_rgba(52,211,153,0.8)] font-black border border-emerald-300";
                 box.innerText = `✅ EXACTO -> Asistencia completa (${real}/${esperado})`;
             }
         }

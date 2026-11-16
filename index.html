@@ -39,12 +39,15 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                <div>
-                    <label class="block text-[11px] font-semibold text-[#544A43] mb-0.5">Buscar por ID o Nombre:</label>
-                    <input type="text" id="searchInput" placeholder="Ej. 1 o Kathleen..." 
+                <div class="relative">
+                    <label class="block text-[11px] font-semibold text-[#544A43] mb-0.5">Buscar por ID o Nombre (tolera errores):</label>
+                    <input type="text" id="searchInput" autocomplete="off" placeholder="Ej. 1, Katlin, Aarón..." 
                            class="w-full bg-[#F6F3EC] text-[#2C2724] font-bold px-2.5 py-2 rounded-lg border-2 border-[#D4B07B] focus:outline-none focus:ring-2 focus:ring-[#B38F56] shadow-inner text-xs sm:text-sm"
                            oninput="realizarBusqueda()"
-                           onkeydown="if(event.key==='Enter') document.getElementById('realInput').focus()">
+                           onkeydown="manejarTecladoBusqueda(event)">
+                    <!-- Lista desplegable de coincidencias en tiempo real -->
+                    <ul id="sugerenciasLista" class="hidden absolute left-0 right-0 mt-1 bg-[#FAF7F2] border-2 border-[#D4B07B] rounded-lg shadow-xl max-h-60 overflow-y-auto z-30 divide-y divide-[#E3D8C8]">
+                    </ul>
                 </div>
                 <div>
                     <label class="block text-[11px] font-semibold text-[#544A43] mb-0.5">Cantidad Real que Ingresa:</label>
@@ -62,17 +65,17 @@
 
             <!-- Resultados en Tarjetas -->
             <div class="grid grid-cols-3 gap-1.5 pt-1">
-                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden">
+                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden flex flex-col justify-center">
                     <span class="block text-[9px] sm:text-xs text-[#807266]">Nombre Confirmado</span>
                     <span id="resNombre" class="text-xs sm:text-sm font-bold text-[#B38F56] truncate block">-</span>
                 </div>
-                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden">
+                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden flex flex-col justify-center">
                     <span class="block text-[9px] sm:text-xs text-[#807266]">En Lista</span>
                     <span id="resLista" class="text-xs sm:text-sm font-bold text-[#2A754F] block">-</span>
                 </div>
-                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden">
+                <div class="bg-[#F6F3EC] p-2 rounded-lg border border-[#E3D8C8] text-center overflow-hidden flex flex-col justify-center">
                     <span class="block text-[9px] sm:text-xs text-[#807266]">Mesa Asignada</span>
-                    <span id="resMesa" class="text-xs sm:text-sm font-bold text-[#91713E] truncate block">-</span>
+                    <div id="resMesa" class="text-xs sm:text-sm font-bold text-[#91713E] flex flex-col items-center justify-center leading-tight">-</div>
                 </div>
             </div>
 
@@ -103,19 +106,22 @@
 
         <!-- Tabla General Adaptada al 100% Sin Scroll Horizontal -->
         <section class="bg-[#FAF7F2] border border-[#E3D8C8] rounded-xl p-2.5 sm:p-4 shadow-sm space-y-2">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-1">
                 <h2 class="text-xs sm:text-base font-bold text-[#2C2724] font-serif-title">📋 Lista General de Invitados</h2>
-                <span id="totalRegistros" class="text-[10px] sm:text-xs text-[#807266]">Total: 37 registros</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-[9px] sm:text-[10px] bg-[#F0E8DC] text-[#91713E] px-2 py-0.5 rounded border border-[#D4B07B]/50 font-semibold">★ Principal / + Adicional</span>
+                    <span id="totalRegistros" class="text-[10px] sm:text-xs text-[#807266]">Total: 37 registros</span>
+                </div>
             </div>
             
             <div class="rounded-lg border border-[#E3D8C8] overflow-x-hidden overflow-y-auto max-h-[380px] w-full">
                 <table class="w-full text-left border-collapse table-fixed">
                     <thead class="bg-[#F6F3EC] text-[#544A43] sticky top-0 uppercase text-[9px] sm:text-[11px] tracking-tight z-10 border-b border-[#E3D8C8]">
                         <tr>
-                            <th class="p-1 sm:p-2 text-center w-[10%]">ID</th>
-                            <th class="p-1 sm:p-2 w-[32%]">NOMBRE</th>
+                            <th class="p-1 sm:p-2 text-center w-[9%]">ID</th>
+                            <th class="p-1 sm:p-2 w-[31%]">NOMBRE</th>
                             <th class="p-1 sm:p-2 text-center w-[10%]">LISTA</th>
-                            <th class="p-1 sm:p-2 w-[22%]">MESA</th>
+                            <th class="p-1 sm:p-2 w-[24%]">MESA</th>
                             <th class="p-1 sm:p-2 text-center w-[12%]">REAL</th>
                             <th class="p-1 sm:p-2 text-center w-[14%]">ESTADO</th>
                         </tr>
@@ -171,7 +177,7 @@
             {id: 24, nombre: "Mathias Orozco", lista: 5, mesa: "Mesa 9", real: 0},
             {id: 25, nombre: "Kenet Cordero", lista: 3, mesa: "Mesa 16", real: 0},
             {id: 26, nombre: "Niña Hillary", lista: 1, mesa: "Mesa 19", real: 0},
-            {id: 27, nombre: "Alessandro Gonzales", lista: 12, mesa: "Mesa 6 /4 ", real: 0},
+            {id: 27, nombre: "Alessandro Gonzales", lista: 12, mesa: "Mesa 6 / 4", real: 0},
             {id: 28, nombre: "Dariela Quesada", lista: 3, mesa: "Mesa 12", real: 0},
             {id: 29, nombre: "Aarón López", lista: 4, mesa: "Mesa 11", real: 0},
             {id: 30, nombre: "Aarón Silva", lista: 4, mesa: "Mesa 7", real: 0},
@@ -185,11 +191,136 @@
         ];
 
         let invitadoActual = null;
+        let resultadosActuales = [];
+        let indiceSugerenciaActivo = -1;
+
+        // Normaliza texto (minúsculas, sin tildes ni espacios extra)
+        function normalizarTexto(texto) {
+            return texto
+                .toString()
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim();
+        }
+
+        // Distancia de Levenshtein para tolerar errores ortográficos
+        function distanciaLevenshtein(a, b) {
+            if (a.length === 0) return b.length;
+            if (b.length === 0) return a.length;
+            const matrix = Array.from({ length: b.length + 1 }, (_, i) => [i]);
+            for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    const cost = b[i - 1] === a[j - 1] ? 0 : 1;
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j] + 1,      // eliminación
+                        matrix[i][j - 1] + 1,      // inserción
+                        matrix[i - 1][j - 1] + cost // sustitución
+                    );
+                }
+            }
+            return matrix[b.length][a.length];
+        }
+
+        // Evalúa qué tan bien coincide un invitado con la búsqueda (menor = mejor)
+        function evaluarCoincidencia(invitado, queryNorm) {
+            if (invitado.id.toString() === queryNorm) return 0; // Coincidencia exacta por ID
+
+            const nombreNorm = normalizarTexto(invitado.nombre);
+            if (nombreNorm === queryNorm) return 1;
+            if (nombreNorm.startsWith(queryNorm)) return 2;
+            if (nombreNorm.includes(queryNorm)) return 3;
+
+            const palabras = nombreNorm.split(/[\s()]+/).filter(Boolean);
+            const tokensQuery = queryNorm.split(/\s+/).filter(Boolean);
+            let mejorPuntaje = Infinity;
+
+            for (const tq of tokensQuery) {
+                if (tq.length < 2) continue;
+                const tolerancia = tq.length <= 4 ? 1 : (tq.length <= 7 ? 2 : 3);
+
+                for (const pal of palabras) {
+                    if (pal.startsWith(tq)) {
+                        mejorPuntaje = Math.min(mejorPuntaje, 4);
+                    }
+                    const distCompleta = distanciaLevenshtein(tq, pal);
+                    const prefijoPal = pal.slice(0, tq.length + 1);
+                    const distPrefijo = distanciaLevenshtein(tq, prefijoPal);
+                    const distMin = Math.min(distCompleta, distPrefijo);
+
+                    if (distMin <= tolerancia) {
+                        mejorPuntaje = Math.min(mejorPuntaje, 5 + distMin);
+                    }
+                }
+            }
+            return mejorPuntaje;
+        }
+
+        // Interpreta la mesa principal y la mesa adicional (y excedente si aplica)
+        function obtenerDetalleMesas(inv) {
+            const mesaStr = (inv.mesa || "").trim();
+            if (!mesaStr.includes('/')) {
+                return { dividida: false, principal: mesaStr, adicional: null };
+            }
+
+            const partes = mesaStr.split('/').map(p => p.trim()).filter(Boolean);
+            let principal = partes[0];
+            let segunda = partes[1] || "";
+
+            // Si la segunda parte es solo un número (ej. "Mesa 3 / 4"), anteponer "Mesa "
+            if (/^\d+$/.test(segunda)) {
+                segunda = `Mesa ${segunda}`;
+            }
+
+            // Si el grupo supera la capacidad estándar de 10, mostrar desglose (10) y (+excedente)
+            if (inv.lista > 10 && !principal.includes('(') && !segunda.includes('(')) {
+                const excedente = inv.lista - 10;
+                principal = `${principal} (10)`;
+                segunda = `${segunda} (+${excedente})`;
+            }
+
+            return { dividida: true, principal, adicional: segunda };
+        }
+
+        // Renderiza visualmente mesa simple o mesa dividida (Principal + Adicional)
+        function formatearMesaHTML(inv, modoTarjeta = false) {
+            const info = obtenerDetalleMesas(inv);
+            if (!info.dividida) {
+                return `<span class="font-semibold text-[#6E6259]">${info.principal}</span>`;
+            }
+
+            if (modoTarjeta) {
+                return `
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#F0E8DC] text-[#7D5E2E] border border-[#D4B07B] font-extrabold text-[10px] sm:text-xs" title="Mesa Principal">
+                        ★ ${info.principal}
+                    </span>
+                    <span class="text-[9px] sm:text-[10px] text-[#807266] font-semibold mt-0.5" title="Mesa Adicional">
+                        + Adic: ${info.adicional}
+                    </span>
+                `;
+            }
+
+            return `
+                <div class="flex flex-col gap-0.5 leading-tight">
+                    <span class="inline-block px-1.5 py-0.5 rounded bg-[#F0E8DC] text-[#7D5E2E] border border-[#D4B07B]/70 font-bold text-[9px] sm:text-[11px] truncate" title="Mesa Principal: ${info.principal}">
+                        ★ ${info.principal}
+                    </span>
+                    <span class="inline-block px-1 py-0.2 rounded bg-[#ECE6DC] text-[#6E6259] text-[8px] sm:text-[10px] font-medium truncate" title="Mesa Adicional: ${info.adicional}">
+                        + Adic: ${info.adicional}
+                    </span>
+                </div>
+            `;
+        }
 
         function renderApp() {
             renderTabla();
             actualizarEstadisticas();
-            realizarBusqueda();
+            if (invitadoActual) {
+                const actualizado = invitados.find(i => i.id === invitadoActual.id);
+                if (actualizado) seleccionarInvitado(actualizado, false);
+            }
         }
 
         function renderTabla() {
@@ -219,9 +350,9 @@
                 tr.className = rowBgColor;
                 tr.innerHTML = `
                     <td class="p-1 sm:p-1.5 text-center font-mono font-bold text-[#B38F56]">${inv.id}</td>
-                    <td class="p-1 sm:p-1.5 font-semibold text-[#2C2724] truncate" title="${inv.nombre}">${inv.nombre}</td>
+                    <td class="p-1 sm:p-1.5 font-semibold text-[#2C2724] truncate cursor-pointer hover:text-[#91713E]" title="${inv.nombre}" onclick="seleccionarDesdeTabla(${inv.id})">${inv.nombre}</td>
                     <td class="p-1 sm:p-1.5 text-center font-bold text-[#91713E]">${inv.lista}</td>
-                    <td class="p-1 sm:p-1.5 text-[#6E6259] text-[10px] sm:text-xs truncate" title="${inv.mesa}">${inv.mesa}</td>
+                    <td class="p-1 sm:p-1.5 text-[10px] sm:text-xs">${formatearMesaHTML(inv, false)}</td>
                     <td class="p-1 sm:p-1.5 text-center">
                         <input type="number" min="0" value="${inv.real}" 
                                class="w-10 sm:w-12 bg-[#FAF7F2] text-[#2C2724] font-bold text-center py-0.5 rounded border border-[#D4B07B] focus:ring-1 focus:ring-[#B38F56] text-xs shadow-inner"
@@ -232,6 +363,14 @@
                 tbody.appendChild(tr);
             });
             document.getElementById('totalRegistros').innerText = `Total: ${invitados.length} registros`;
+        }
+
+        function seleccionarDesdeTabla(id) {
+            const inv = invitados.find(i => i.id === id);
+            if (!inv) return;
+            document.getElementById('searchInput').value = inv.nombre;
+            ocultarSugerencias();
+            seleccionarInvitado(inv, true);
         }
 
         function actualizarRealTabla(index, value) {
@@ -258,39 +397,157 @@
             document.getElementById('statFaltantesTotal').innerText = faltantes > 0 ? faltantes : 0;
         }
 
-        function realizarBusqueda() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            if (!query) {
-                invitadoActual = null;
-                document.getElementById('resNombre').innerText = "-";
-                document.getElementById('resLista').innerText = "-";
-                document.getElementById('resMesa').innerText = "-";
-                document.getElementById('realInput').value = 0;
-                document.getElementById('estadoBox').className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#F6F3EC] text-[#6E6259] border border-[#E3D8C8]";
-                document.getElementById('estadoBox').innerText = "⏳ Ingrese un ID o Nombre para registrar llegada";
+        function seleccionarInvitado(inv, enfocarReal = false) {
+            invitadoActual = inv;
+            document.getElementById('resNombre').innerText = inv.nombre;
+            document.getElementById('resLista').innerText = inv.lista;
+            document.getElementById('resMesa').innerHTML = formatearMesaHTML(inv, true);
+            document.getElementById('realInput').value = inv.real;
+            actualizarEstadoPanel();
+
+            if (enfocarReal) {
+                const realInput = document.getElementById('realInput');
+                realInput.focus();
+                realInput.select();
+            }
+        }
+
+        function limpiarSeleccion() {
+            invitadoActual = null;
+            document.getElementById('resNombre').innerText = "-";
+            document.getElementById('resLista').innerText = "-";
+            document.getElementById('resMesa').innerHTML = "-";
+            document.getElementById('realInput').value = 0;
+            const box = document.getElementById('estadoBox');
+            box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#F6F3EC] text-[#6E6259] border border-[#E3D8C8]";
+            box.innerText = "⏳ Ingrese un ID o Nombre para registrar llegada";
+        }
+
+        // Muestra las sugerencias justo debajo del campo de búsqueda
+        function renderSugerencias(lista) {
+            const ul = document.getElementById('sugerenciasLista');
+            ul.innerHTML = '';
+
+            if (lista.length === 0) {
+                ul.classList.add('hidden');
                 return;
             }
 
-            let encontrado = invitados.find(i => i.id.toString() === query || i.nombre.toLowerCase().includes(query));
+            lista.forEach((item, idx) => {
+                const inv = item.invitado;
+                const infoMesa = obtenerDetalleMesas(inv);
+                const li = document.createElement('li');
+                const esActivo = idx === indiceSugerenciaActivo;
 
-            if (encontrado) {
-                invitadoActual = encontrado;
-                document.getElementById('resNombre').innerText = encontrado.nombre;
-                document.getElementById('resLista').innerText = encontrado.lista;
-                document.getElementById('resMesa').innerText = encontrado.mesa;
-                document.getElementById('realInput').value = encontrado.real;
-                actualizarEstadoPanel();
+                li.className = `px-3 py-2 cursor-pointer flex items-center justify-between gap-2 text-xs transition ${
+                    esActivo ? 'bg-[#EFE6D5]' : 'hover:bg-[#F6F3EC]'
+                }`;
+
+                const badgeMesa = infoMesa.dividida
+                    ? `<span class="text-[10px] font-bold text-[#7D5E2E] bg-[#F0E8DC] px-1.5 py-0.5 rounded border border-[#D4B07B]">★ ${infoMesa.principal} | +${infoMesa.adicional}</span>`
+                    : `<span class="text-[10px] text-[#6E6259] font-medium">${infoMesa.principal}</span>`;
+
+                li.innerHTML = `
+                    <div class="truncate">
+                        <span class="font-mono font-bold text-[#B38F56] mr-1">#${inv.id}</span>
+                        <span class="font-bold text-[#2C2724]">${inv.nombre}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        ${badgeMesa}
+                        <span class="text-[10px] font-bold text-[#2A754F] bg-[#E8F3ED] px-1.5 py-0.5 rounded">${inv.real}/${inv.lista}</span>
+                    </div>
+                `;
+
+                li.onmousedown = (e) => {
+                    e.preventDefault();
+                    document.getElementById('searchInput').value = inv.nombre;
+                    ocultarSugerencias();
+                    seleccionarInvitado(inv, true);
+                };
+
+                ul.appendChild(li);
+            });
+
+            ul.classList.remove('hidden');
+        }
+
+        function ocultarSugerencias() {
+            document.getElementById('sugerenciasLista').classList.add('hidden');
+            indiceSugerenciaActivo = -1;
+        }
+
+        function manejarTecladoBusqueda(event) {
+            const ul = document.getElementById('sugerenciasLista');
+            const visible = !ul.classList.contains('hidden');
+
+            if (event.key === 'ArrowDown' && visible && resultadosActuales.length > 0) {
+                event.preventDefault();
+                indiceSugerenciaActivo = (indiceSugerenciaActivo + 1) % resultadosActuales.length;
+                renderSugerencias(resultadosActuales);
+                seleccionarInvitado(resultadosActuales[indiceSugerenciaActivo].invitado, false);
+            } else if (event.key === 'ArrowUp' && visible && resultadosActuales.length > 0) {
+                event.preventDefault();
+                indiceSugerenciaActivo = (indiceSugerenciaActivo - 1 + resultadosActuales.length) % resultadosActuales.length;
+                renderSugerencias(resultadosActuales);
+                seleccionarInvitado(resultadosActuales[indiceSugerenciaActivo].invitado, false);
+            } else if (event.key === 'Escape') {
+                ocultarSugerencias();
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                if (visible && resultadosActuales.length > 0) {
+                    const elegido = indiceSugerenciaActivo >= 0
+                        ? resultadosActuales[indiceSugerenciaActivo].invitado
+                        : resultadosActuales[0].invitado;
+                    document.getElementById('searchInput').value = elegido.nombre;
+                    ocultarSugerencias();
+                    seleccionarInvitado(elegido, true);
+                } else if (invitadoActual) {
+                    document.getElementById('realInput').focus();
+                }
+            }
+        }
+
+        function realizarBusqueda() {
+            const rawQuery = document.getElementById('searchInput').value;
+            const queryNorm = normalizarTexto(rawQuery);
+            indiceSugerenciaActivo = -1;
+
+            if (!queryNorm) {
+                resultadosActuales = [];
+                ocultarSugerencias();
+                limpiarSeleccion();
+                return;
+            }
+
+            resultadosActuales = invitados
+                .map(inv => ({ invitado: inv, score: evaluarCoincidencia(inv, queryNorm) }))
+                .filter(item => item.score < Infinity)
+                .sort((a, b) => a.score - b.score || a.invitado.id - b.invitado.id)
+                .slice(0, 8);
+
+            if (resultadosActuales.length > 0) {
+                renderSugerencias(resultadosActuales);
+                seleccionarInvitado(resultadosActuales[0].invitado, false);
             } else {
+                ocultarSugerencias();
                 invitadoActual = null;
                 document.getElementById('resNombre').innerText = "No encontrado";
                 document.getElementById('resLista').innerText = "-";
-                document.getElementById('resMesa').innerText = "-";
+                document.getElementById('resMesa').innerHTML = "-";
                 document.getElementById('realInput').value = 0;
                 const box = document.getElementById('estadoBox');
                 box.className = "p-2.5 rounded-lg text-center font-bold text-xs transition-all bg-[#FFF3DC] text-[#B38F56] border border-[#D4B07B]";
                 box.innerText = "⚠️ Invitado no encontrado en la lista";
             }
         }
+
+        document.addEventListener('click', (e) => {
+            const searchInput = document.getElementById('searchInput');
+            const ul = document.getElementById('sugerenciasLista');
+            if (!searchInput.contains(e.target) && !ul.contains(e.target)) {
+                ocultarSugerencias();
+            }
+        });
 
         function confirmarIngreso() {
             if (!invitadoActual) return;
@@ -302,7 +559,8 @@
                 renderApp();
                 document.getElementById('searchInput').value = "";
                 document.getElementById('searchInput').focus();
-                realizarBusqueda();
+                ocultarSugerencias();
+                limpiarSeleccion();
             }
         }
 
@@ -354,13 +612,14 @@
                                 id: row[0],
                                 nombre: row[1],
                                 lista: parseInt(row[2]) || 1,
-                                mesa: row[3] || "Sin Asignar",
+                                mesa: row[3] ? row[3].toString().trim() : "Sin Asignar",
                                 real: 0
                             });
                         }
                     }
                     if (nuevaLista.length > 0) {
                         invitados = nuevaLista;
+                        limpiarSeleccion();
                         renderApp();
                         document.getElementById('fileStatus').innerText = `✅ Cargado: ${file.name} (${invitados.length} invitados)`;
                         document.getElementById('fileStatus').className = "text-[10px] text-[#2A754F] font-bold italic";
